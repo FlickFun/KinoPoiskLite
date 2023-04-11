@@ -1,0 +1,12 @@
+<resources>
+    <attr name="colorTurquoise" format="color" />
+    <attr name="colorOnTurquoise" format="color" />
+    <attr name="colorTurquoiseContainer" format="color" />
+    <attr name="colorOnTurquoiseContainer" format="color" />
+    <attr name="harmonizeTurquoise" format="boolean" />
+    <attr name="colorPink" format="color" />
+    <attr name="colorOnPink" format="color" />
+    <attr name="colorPinkContainer" format="color" />
+    <attr name="colorOnPinkContainer" format="color" />
+    <attr name="harmonizePink" format="boolean" />
+</resources>

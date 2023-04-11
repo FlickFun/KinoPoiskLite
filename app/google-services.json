@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "573907194071",
+    "firebase_url": "https://kinopoisklite-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "kinopoisklite",
+    "storage_bucket": "kinopoisklite.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573907194071:android:051ab9529db61c1011a092",
+        "android_client_info": {
+          "package_name": "com.fsoftstudio.kinopoisklite"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "573907194071-5e7foob7l2u8712mqe0bjck3mheh44ae.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fsoftstudio.kinopoisklite",
+            "certificate_hash": "6d68f762b183ddcf7c0572df19a77d780960d84e"
+          }
+        },
+        {
+          "client_id": "573907194071-5fmpanjhrcv6sojmjcd2in1vkrtbhphu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKc-e9OeqLMIOQGS0fEP0FIzVi8pr5bFE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "573907194071-5fmpanjhrcv6sojmjcd2in1vkrtbhphu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

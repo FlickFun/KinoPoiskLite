@@ -1,0 +1,73 @@
+<resources>
+
+    <!-- Common -->
+    <string name="app_name">KinoPoiskLite</string>
+    <string name="no_title">Без названия</string>
+    <string name="nothing">…</string>
+    <string name="guest">Гость</string>
+    <string name="telegram_dev">Телеграм разработчика</string>
+    <string name="ok">OK</string>
+    <string name="link_not_opens">\tСсылка не открывается.</string>
+
+    <!-- MainActivity -->
+    <string name="title_home">Домой</string>
+    <string name="title_search">Поиск</string>
+    <string name="title_favorite">Избранное</string>
+    <string name="title_profile">Профиль</string>
+
+    <!-- HomeFragment -->
+    <string name="popular_today">Популярное сегодня</string>
+    <string name="films">Фильмы</string>
+    <string name="series">Сериалы</string>
+
+    <!-- SearchFragment -->
+    <string name="write_name_movie">Введите название фильма или сериала</string>
+    <string name="search">ПОИСК</string>
+    <string name="nothing_find">\tНичего не найдено.</string>
+
+    <!-- CinemaInfoActivity -->
+    <string name="add_to_favorite">Добавить в избранное</string>
+
+    <string name="relise">Релиз:</string>
+    <string name="runtime">Продолжительность:</string>
+    <string name="actors">Актёры:</string>
+    <string name="genres">Жанры:</string>
+    <string name="overview">Описание:</string>
+    <string name="notice">\tУведомление:</string>
+    <string name="boot_auto_start_description">\tХотите получать уведомления о новых фильмах даже после перезагрузки смартфона?\n\tДля этого необходимо перейти в настройки и подключить автозапуск уведомлений для приложения.</string>
+    <string name="go_to_settings">Перейти</string>
+    <string name="late">Позже</string>
+    <string name="don_t_asc">Не спрашивать</string>
+
+    <!-- ProfileFragment -->
+    <string name="title_login">Вход в аккаунт</string>
+    <string name="title_signup">Регистрация</string>
+    <string name="login">Войти</string>
+    <string name="signup">Зарегистрироваться</string>
+    <string name="logout">Выйти</string>
+
+    <string name="write_name">Введите имя (необязательно)</string>
+    <string name="write_second_name">Введите email (необязательно)</string>
+    <string name="write_login">Введите логин</string>
+    <string name="write_password">Введите пароль</string>
+    <string name="login_in_profile">Логин:</string>
+    <string name="name_in_profile">Имя:</string>
+    <string name="second_name_in_profile">Email:</string>
+
+    <string name="themes">Тема приложения:</string>
+
+    <string name="not_all_work">\t(если на смартфоне установлена тёмная тема, то переключение приложения в светлую тему работает не на всех моделях смартфонов).</string>
+    <string name="light_theme">Светлая тема</string>
+    <string name="dark_theme">Тёмная тема</string>
+    <string name="system_themes">Системная тема</string>
+    <string name="save_battery_theme">Экономия заряда батареи</string>
+
+    <string name="favorite">Избранное</string>
+    <string name="no_favorite_movies">\tФильмы в избранное ещё не добавлены.</string>
+    <string name="no_favorite_tv_series">\tСериалы в избранное ещё не добавлены.</string>
+
+    <!-- notify -->
+    <string name="notification_title">Топ фильмов изменился</string>
+    <string name="notification_subtitle">Будь в курсе популярых фильмов</string>
+
+</resources>
