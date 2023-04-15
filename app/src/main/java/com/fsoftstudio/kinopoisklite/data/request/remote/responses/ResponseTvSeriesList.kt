@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 package com.fsoftstudio.kinopoisklite.data.request.remote.responses
+
 import com.fsoftstudio.kinopoisklite.data.request.local.room.dao.TvSeriesPosterEntity
 import com.fsoftstudio.kinopoisklite.domain.models.Poster
-import com.fsoftstudio.kinopoisklite.parameters.Sys.NOTHING
+import com.fsoftstudio.kinopoisklite.parameters.Sys.NO_DATA
 import com.fsoftstudio.kinopoisklite.parameters.Sys.TV_SERIES
 import com.google.gson.annotations.SerializedName
 
@@ -29,7 +30,7 @@ data class TvSeriesPoster(
     @SerializedName("id")
     val id: Int,
     @SerializedName("name")
-    val title: String,
+    val title: String?,
     @SerializedName("poster_path")
     val posterPath: String?,
     @SerializedName("popularity")
@@ -39,16 +40,16 @@ data class TvSeriesPoster(
 fun TvSeriesPoster.mapToLocal(): TvSeriesPosterEntity {
     return TvSeriesPosterEntity(
         id = this.id,
-        title = this.title,
-        posterPath = this.posterPath ?: NOTHING,
-        popularityWeight = this.popularityWeight ?: 0.0f
+        title = this.title ?: NO_DATA,
+        posterPath = this.posterPath,
+        popularityWeight = this.popularityWeight ?: 0.0F
     )
 }
 
 fun TvSeriesPoster.mapToPoster(): Poster {
     return Poster(
         id = this.id,
-        title = this.title,
+        title = this.title ?: NO_DATA,
         posterPath = this.posterPath,
         cinema = TV_SERIES,
         favorite = false

@@ -16,17 +16,24 @@
 package com.fsoftstudio.kinopoisklite.ui.screens.favorite
 
 import android.annotation.SuppressLint
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fsoftstudio.kinopoisklite.R
 import com.fsoftstudio.kinopoisklite.databinding.FragmentFavoriteBinding
-import com.fsoftstudio.kinopoisklite.domain.models.Poster
+import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaFavoriteUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.UserProfileUseCase
+import com.fsoftstudio.kinopoisklite.parameters.Sys.FRAGMENT_FAVORITE
 import com.fsoftstudio.kinopoisklite.ui.adapters.ListCinemaRcAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -38,9 +45,6 @@ class FavoriteFragment : Fragment() {
 
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
-
-    private var searchMovies: List<Poster>? = null
-    private var searchTvSeries: List<Poster>? = null
 
     @Inject
     lateinit var listMovieRcAdapter: ListCinemaRcAdapter
@@ -58,9 +62,13 @@ class FavoriteFragment : Fragment() {
 
         initCinemaRecycleView()
         observeViewModel()
-        showFavorite()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        favoriteViewModel.sendToDomainThatReadyToShowFavorite()
     }
 
     override fun onDestroyView() {
@@ -71,29 +79,57 @@ class FavoriteFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun observeViewModel() = with(binding) {
 
-        favoriteViewModel.moviePosters.observe(viewLifecycleOwner) { searchMovies ->
-            tvFavorite.text = "${getString(R.string.favorite)} - ${UserProfileUseCase.user?.login ?: getString(R.string.guest)}"
-            if (searchMovies.isNotEmpty()) {
-                rvMovieFavorite.visibility = View.VISIBLE
-                tvNoFavoriteMovie.visibility = View.GONE
-                listMovieRcAdapter.updateSearchRcAdapter(searchMovies)
+        tvFavorite.text =
+            (UserProfileUseCase.user?.login ?: getString(R.string.guest)).getFavoriteTitle()
+
+        favoriteViewModel.moviePosters.observe(viewLifecycleOwner) { favoriteMovies ->
+            if (favoriteMovies.isNotEmpty()) {
+                rvMovieFavorite.visibility = VISIBLE
+                tvNoFavoriteMovie.visibility = GONE
+
+                val favoriteSet = getFavoriteHahSet()
+                if (!favoriteSet.isNullOrEmpty()) {
+                    listMovieRcAdapter.updateRcAdapter(
+                        newPosters = favoriteMovies.filter { e -> favoriteSet.contains(e.id) },
+                        fromFragment = FRAGMENT_FAVORITE
+                    )
+                }
             } else {
-                rvMovieFavorite.visibility = View.GONE
-                tvNoFavoriteMovie.visibility = View.VISIBLE
+                rvMovieFavorite.visibility = GONE
+                tvNoFavoriteMovie.visibility = VISIBLE
             }
-            this@FavoriteFragment.searchMovies = searchMovies
         }
 
-        favoriteViewModel.tvSeriesPosters.observe(viewLifecycleOwner) { searchTvSeries ->
-            if (searchTvSeries.isNotEmpty()) {
-                rvTvSeriesFavorite.visibility = View.VISIBLE
-                tvNoFavoriteTvSeries.visibility = View.GONE
-                listTvSeriesRcAdapter.updateSearchRcAdapter(searchTvSeries)
+        favoriteViewModel.tvSeriesPosters.observe(viewLifecycleOwner) { favoriteTvSeries ->
+            if (favoriteTvSeries.isNotEmpty()) {
+                rvTvSeriesFavorite.visibility = VISIBLE
+                tvNoFavoriteTvSeries.visibility = GONE
+
+                val favoriteSet = getFavoriteHahSet()
+                if (!favoriteSet.isNullOrEmpty()) {
+                    listTvSeriesRcAdapter.updateRcAdapter(
+                        newPosters = favoriteTvSeries.filter { e -> favoriteSet.contains(e.id) },
+                        fromFragment = FRAGMENT_FAVORITE
+                    )
+                }
             } else {
-                rvTvSeriesFavorite.visibility = View.GONE
-                tvNoFavoriteTvSeries.visibility = View.VISIBLE
+                rvTvSeriesFavorite.visibility = GONE
+                tvNoFavoriteTvSeries.visibility = VISIBLE
             }
-            this@FavoriteFragment.searchTvSeries = searchTvSeries
+        }
+    }
+
+    private fun getFavoriteHahSet() = ListCinemaFavoriteUseCase.favorite
+
+    private fun String.getFavoriteTitle(): SpannableStringBuilder {
+        val favorite = "${getString(R.string.favorite)} - "
+        return SpannableStringBuilder(favorite + this).apply {
+            setSpan(
+                StyleSpan(Typeface.BOLD),
+                favorite.length - 1,
+                this.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+            )
         }
     }
 
@@ -105,11 +141,4 @@ class FavoriteFragment : Fragment() {
         rvTvSeriesFavorite.layoutManager = LinearLayoutManager(this@FavoriteFragment.context)
         rvTvSeriesFavorite.adapter = listTvSeriesRcAdapter
     }
-
-    private fun showFavorite() {
-        favoriteViewModel.sendToDomainThatReadyToShowFavorite()
-        searchMovies?.let { listMovieRcAdapter.updateSearchRcAdapter(it) }
-        searchTvSeries?.let { listTvSeriesRcAdapter.updateSearchRcAdapter(it) }
-    }
-
 }

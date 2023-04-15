@@ -176,7 +176,7 @@ class DataRepositoryImp @Inject constructor(
                 tMDbLocalDataSource.loadFavoriteMovieEntities(MOVIE, intList)
                     .toObservable()
                     .flatMap { entities ->
-                        Observable.just(entities.map { it.mapToPoster() })
+                        Observable.just(entities.map { it.mapToPosterForFavorite() })
                     }
             }
 
@@ -186,7 +186,7 @@ class DataRepositoryImp @Inject constructor(
                 tMDbLocalDataSource.loadFavoriteTvSeriesEntities(TV_SERIES, intList)
                     .toObservable()
                     .flatMap { entities ->
-                        Observable.just(entities.map { it.mapToPoster() })
+                        Observable.just(entities.map { it.mapToPosterForFavorite() })
                     }
             }
 

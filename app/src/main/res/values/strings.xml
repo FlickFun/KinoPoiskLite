@@ -2,7 +2,6 @@
 
     <!-- Common -->
     <string name="app_name">KinoPoiskLite</string>
-    <string name="no_title">Без названия</string>
     <string name="nothing">…</string>
     <string name="guest">Гость</string>
     <string name="telegram_dev">Телеграм разработчика</string>

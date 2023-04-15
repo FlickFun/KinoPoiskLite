@@ -195,6 +195,7 @@ class BootAutostartPermissionHelper private constructor() {
         val pm = context.packageManager
 
 
+        @Suppress("DEPRECATION")
         packages =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) pm.getInstalledApplications(
                 PackageManager.ApplicationInfoFlags.of(0)
@@ -303,10 +304,10 @@ class BootAutostartPermissionHelper private constructor() {
                 open
             )
         ) true
-        else launchOppoAppInfo(context, open, newTask)
+        else launchOppoAppInfo(context, open)
     }
 
-    private fun launchOppoAppInfo(context: Context, open: Boolean, newTask: Boolean): Boolean {
+    private fun launchOppoAppInfo(context: Context, open: Boolean): Boolean {
         return try {
             val i = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             i.addCategory(Intent.CATEGORY_DEFAULT)
@@ -385,6 +386,7 @@ class BootAutostartPermissionHelper private constructor() {
     private fun isPackageExists(context: Context, targetPackage: String): Boolean {
         val packages: List<ApplicationInfo>
         val pm = context.packageManager
+        @Suppress("DEPRECATION")
         packages =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) pm.getInstalledApplications(
                 PackageManager.ApplicationInfoFlags.of(0)
@@ -428,6 +430,7 @@ class BootAutostartPermissionHelper private constructor() {
      *
      * @return the intent generated
      */
+    @Suppress("SameParameterValue")
     private fun getIntentFromAction(intentAction: String, newTask: Boolean): Intent {
         return Intent().apply {
             action = intentAction
@@ -451,6 +454,7 @@ class BootAutostartPermissionHelper private constructor() {
                 PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong())
             ).isNotEmpty()
         } else {
+            @Suppress("DEPRECATION")
             context.packageManager.queryIntentActivities(
                 intent, PackageManager.MATCH_DEFAULT_ONLY
             ).isNotEmpty()

@@ -16,10 +16,10 @@
 package com.fsoftstudio.kinopoisklite.domain.models
 
 data class CinemaInfo(
-    var title: String? = null,
-    var releaseDate: String? = null,
-    var runtime: String? = null,
-    var genres: String? = null,
-    var actors: String? = null,
-    var oveview: String? = null
+    var title: String,
+    var releaseDate: String,
+    var runtime: String,
+    var genres: String,
+    var actors: String,
+    var oveview: String
 )

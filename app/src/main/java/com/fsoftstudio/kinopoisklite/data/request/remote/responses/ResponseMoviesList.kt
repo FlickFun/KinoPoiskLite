@@ -18,7 +18,7 @@ package com.fsoftstudio.kinopoisklite.data.request.remote.responses
 import com.fsoftstudio.kinopoisklite.data.request.local.room.dao.MoviePosterEntity
 import com.fsoftstudio.kinopoisklite.domain.models.Poster
 import com.fsoftstudio.kinopoisklite.parameters.Sys.MOVIE
-import com.fsoftstudio.kinopoisklite.parameters.Sys.NOTHING
+import com.fsoftstudio.kinopoisklite.parameters.Sys.NO_DATA
 import com.google.gson.annotations.SerializedName
 
 data class ResponseMoviesList(
@@ -30,7 +30,7 @@ data class MoviePoster(
     @SerializedName("id")
     val id: Int,
     @SerializedName("title")
-    val title: String,
+    val title: String?,
     @SerializedName("poster_path")
     val posterPath: String?,
     @SerializedName("popularity")
@@ -40,16 +40,16 @@ data class MoviePoster(
 fun MoviePoster.mapToLocal(): MoviePosterEntity {
     return MoviePosterEntity(
         id = this.id,
-        title = this.title,
-        posterPath = this.posterPath ?: NOTHING,
-        popularityWeight = this.popularityWeight ?: 0.0f
+        title = this.title ?: NO_DATA,
+        posterPath = this.posterPath,
+        popularityWeight = this.popularityWeight ?: 0.0F
     )
 }
 
 fun MoviePoster.mapToPoster(): Poster {
     return Poster(
         id = this.id,
-        title = this.title,
+        title = this.title ?: NO_DATA,
         posterPath = this.posterPath,
         cinema = MOVIE,
         favorite = false

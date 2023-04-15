@@ -23,6 +23,7 @@ import com.fsoftstudio.kinopoisklite.data.request.remote.responses.MoviePoster
 import com.fsoftstudio.kinopoisklite.data.request.remote.responses.TvSeriesPoster
 import com.fsoftstudio.kinopoisklite.domain.models.CinemaInfo
 import com.fsoftstudio.kinopoisklite.domain.models.Poster
+import com.fsoftstudio.kinopoisklite.parameters.Sys.NO_DATA
 
 @Entity(tableName = CINEMA_INFO_ENTITY)
 class CinemaInfoEntity(
@@ -35,7 +36,7 @@ class CinemaInfoEntity(
     @ColumnInfo(name = "poster_path")
     val posterPath: String?,
     @ColumnInfo(name = "popularity")
-    val popularityWeight: Float?,
+    val popularityWeight: Float,
     @ColumnInfo(name = "release_date")
     val releaseDate: String?,
     @ColumnInfo(name = "runtime")
@@ -47,7 +48,7 @@ class CinemaInfoEntity(
     @ColumnInfo(name = "actors_str")
     val actorsStr: String?,
     @ColumnInfo(name = "cinema")
-    val cinema: String?
+    val cinema: String
 ) {
     companion object {
         const val CINEMA_INFO_ENTITY = "cinema_info_list_entities_table"
@@ -63,21 +64,21 @@ class CinemaInfoEntity(
 fun CinemaInfoEntity.mapToCinemaInfo(): CinemaInfo {
     return CinemaInfo(
         title = this.title,
-        releaseDate = this.releaseDate,
-        runtime = this.runtime,
-        genres = this.genresStr,
-        actors = this.actorsStr,
-        oveview = this.overview
+        releaseDate = this.releaseDate ?: NO_DATA,
+        runtime = this.runtime ?: NO_DATA,
+        genres = this.genresStr ?: NO_DATA,
+        actors = this.actorsStr ?: NO_DATA,
+        oveview = this.overview ?: NO_DATA
     )
 }
 
-fun CinemaInfoEntity.mapToPoster(): Poster {
+fun CinemaInfoEntity.mapToPosterForFavorite(): Poster {
     return Poster(
         id = this.id,
         title = this.title,
         posterPath = this.posterPath,
-        cinema = this.cinema ?: "0",
-        favorite = false
+        cinema = this.cinema,
+        favorite = true
     )
 }
 

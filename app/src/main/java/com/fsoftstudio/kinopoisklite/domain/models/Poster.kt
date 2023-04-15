@@ -16,8 +16,8 @@
 package com.fsoftstudio.kinopoisklite.domain.models
 
 data class Poster(
-    var id: Int? = null,
-    var title: String? = null,
+    var id: Int,
+    var title: String,
     var posterPath: String? = null,
     var cinema: String,
     var favorite: Boolean

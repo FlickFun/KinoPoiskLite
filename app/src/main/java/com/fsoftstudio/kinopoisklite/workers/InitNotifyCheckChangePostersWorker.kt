@@ -17,7 +17,8 @@ package com.fsoftstudio.kinopoisklite.workers
 
 import android.content.Context
 import androidx.work.*
-import com.fsoftstudio.kinopoisklite.parameters.Sys
+import com.fsoftstudio.kinopoisklite.parameters.Sys.NOTIFICATION_WORK
+import com.fsoftstudio.kinopoisklite.parameters.Sys.TAG_OUTPUT
 import java.util.concurrent.TimeUnit
 
 class InitNotifyCheckChangePostersWorker(private val application: Context) {
@@ -30,12 +31,12 @@ class InitNotifyCheckChangePostersWorker(private val application: Context) {
             PeriodicWorkRequestBuilder<NotifyCheckChangePostersWorker>(15, TimeUnit.MINUTES)
                 .setInitialDelay(5, TimeUnit.MINUTES)
                 .setConstraints(workConstraints)
-                .addTag(Sys.TAG_OUTPUT)
+                .addTag(TAG_OUTPUT)
                 .build()
 
         val workManager: WorkManager = WorkManager.getInstance(application.applicationContext)
         workManager.enqueueUniquePeriodicWork(
-            Sys.NOTIFICATION_WORK,
+            NOTIFICATION_WORK,
             ExistingPeriodicWorkPolicy.KEEP,
             checkPostersRequest
         )

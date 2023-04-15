@@ -96,9 +96,9 @@ class CinemaInfoActivity : AppCompatActivity() {
 
         tvTitleInfo.text = title
 
-        ibSwitchFavoriteCinema.setImageDrawable(binding.root.context.let {
-            if (star) it.getDrawable(R.drawable.round_star_24)
-            else it.getDrawable(R.drawable.round_star_border_24)
+        ibSwitchFavoriteCinema.setImageDrawable(binding.root.context.run {
+            if (star) getDrawable(R.drawable.round_star_24)
+            else getDrawable(R.drawable.round_star_border_24)
         })
 
         ibSwitchFavoriteCinema.setOnClickListener {
@@ -119,12 +119,10 @@ class CinemaInfoActivity : AppCompatActivity() {
             binding.apply {
                 tvTitleInfo.text = cinemaInfo.title
                 tvReleaseDateInfo.text = cinemaInfo.releaseDate
-                tvRuntimeInfo.text =
-                    cinemaInfo.runtime + if (cinemaInfo.runtime != NO_DATA) MIN else ""
+                tvRuntimeInfo.text = cinemaInfo.runtime + if (cinemaInfo.runtime != NO_DATA) MIN else ""
                 tvActorsInfo.text = cinemaInfo.actors
                 tvGenresInfo.text = cinemaInfo.genres
-                tvOverviewInfo.text =
-                    if (cinemaInfo.oveview?.isNotEmpty() == true) cinemaInfo.oveview else NO_DATA
+                tvOverviewInfo.text = cinemaInfo.oveview
                 pbInfo.visibility = View.GONE
             }
         }
@@ -134,7 +132,6 @@ class CinemaInfoActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun setOnClickListener() = with(binding) {
         ibBackInfo.setOnClickListener {
             backPage()

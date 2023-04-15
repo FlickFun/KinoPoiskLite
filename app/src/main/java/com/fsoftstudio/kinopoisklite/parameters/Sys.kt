@@ -52,6 +52,7 @@ object Sys {
     const val MIN = " мин."
 
     const val NO_DATA = "Нет данных"
+    const val NO_TITLE = "Без названия"
     const val OK = "ok"
     const val ERROR_EMPTY_FIELD = "Заполните поля."
     const val ERROR_WRONG_LOGIN_ORE_PASSWORD = "Неправильный логин или пароль."
@@ -65,10 +66,10 @@ object Sys {
     const val ERROR_NO_INTERNET = "\tНе подключен интернет либо не работает VPN."
     const val ERROR_NO_API_KEY_PLEASE_INFORM_DEV= "\tНет Api-ключа.$$PLEASE_INFORM_DEV"
 
-    const val NOTIFICATION_ID = "kino_poisk_lite_notification_id_2"
-    const val NOTIFICATION_NAME = "kino_poisk_lite_2"
-    const val NOTIFICATION_CHANNEL = "kino_poisk_lite_channel_01_2"
-    const val NOTIFICATION_WORK = "kino_poisk_lite_notification_work_2"
+    const val NOTIFICATION_ID = "kino_poisk_lite_notification_id"
+    const val NOTIFICATION_NAME = "kino_poisk_lite"
+    const val NOTIFICATION_CHANNEL = "kino_poisk_lite_channel_01"
+    const val NOTIFICATION_WORK = "kino_poisk_lite_notification_work"
     const val TAG_OUTPUT = "NotifyCheckChangePostersWorker"
     const val TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER = "NOTIFY_POSTERS_WORKER"
 
@@ -87,4 +88,8 @@ object Sys {
     const val BOOT_AUTO_START_DO_NOT_ASC = 0
     const val BOOT_AUTO_START_ASC_LATE = 1
     const val BOOT_AUTO_START_OPEN_SETTINGS = 2
+
+    const val FRAGMENT_DEFAULT = 0
+    const val FRAGMENT_FAVORITE = 1
+
 }

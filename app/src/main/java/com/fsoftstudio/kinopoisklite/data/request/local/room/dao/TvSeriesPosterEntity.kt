@@ -28,7 +28,7 @@ class TvSeriesPosterEntity(
     @ColumnInfo(name = "title")
     val title: String,
     @ColumnInfo(name = "poster_path")
-    val posterPath: String,
+    val posterPath: String?,
     @ColumnInfo(name = "popularity")
     val popularityWeight: Float
     ) {

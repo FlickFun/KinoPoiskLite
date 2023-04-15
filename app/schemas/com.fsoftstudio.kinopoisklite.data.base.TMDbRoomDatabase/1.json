@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c5090283ac7e12f6b16cd92ce5d10b14",
+    "identityHash": "80e24ec93c82e6fca80d31af07759401",
     "entities": [
       {
         "tableName": "movies_poster_list_entities_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `poster_path` TEXT NOT NULL, `popularity` REAL NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `poster_path` TEXT, `popularity` REAL NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -24,7 +24,7 @@
             "fieldPath": "posterPath",
             "columnName": "poster_path",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "popularityWeight",
@@ -44,7 +44,7 @@
       },
       {
         "tableName": "tv_series_poster_list_entities_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `poster_path` TEXT NOT NULL, `popularity` REAL NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `poster_path` TEXT, `popularity` REAL NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -62,7 +62,7 @@
             "fieldPath": "posterPath",
             "columnName": "poster_path",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "popularityWeight",
@@ -152,7 +152,7 @@
       },
       {
         "tableName": "cinema_info_list_entities_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`rowid` INTEGER NOT NULL, `id` INTEGER NOT NULL, `title` TEXT NOT NULL, `poster_path` TEXT, `popularity` REAL, `release_date` TEXT, `runtime` TEXT, `overview` TEXT, `genres_str` TEXT, `actors_str` TEXT, `cinema` TEXT, PRIMARY KEY(`rowid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`rowid` INTEGER NOT NULL, `id` INTEGER NOT NULL, `title` TEXT NOT NULL, `poster_path` TEXT, `popularity` REAL NOT NULL, `release_date` TEXT, `runtime` TEXT, `overview` TEXT, `genres_str` TEXT, `actors_str` TEXT, `cinema` TEXT NOT NULL, PRIMARY KEY(`rowid`))",
         "fields": [
           {
             "fieldPath": "rowId",
@@ -182,7 +182,7 @@
             "fieldPath": "popularityWeight",
             "columnName": "popularity",
             "affinity": "REAL",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "releaseDate",
@@ -218,7 +218,7 @@
             "fieldPath": "cinema",
             "columnName": "cinema",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -271,7 +271,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c5090283ac7e12f6b16cd92ce5d10b14')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '80e24ec93c82e6fca80d31af07759401')"
     ]
   }
 }

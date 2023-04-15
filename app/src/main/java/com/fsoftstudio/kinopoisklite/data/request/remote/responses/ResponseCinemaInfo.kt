@@ -20,6 +20,7 @@ import com.fsoftstudio.kinopoisklite.data.request.local.room.dao.CinemaInfoEntit
 import com.fsoftstudio.kinopoisklite.domain.models.CinemaInfo
 import com.fsoftstudio.kinopoisklite.parameters.Sys.MOVIE
 import com.fsoftstudio.kinopoisklite.parameters.Sys.NO_DATA
+import com.fsoftstudio.kinopoisklite.parameters.Sys.NO_TITLE
 import com.fsoftstudio.kinopoisklite.parameters.Sys.TV_SERIES
 import com.google.gson.annotations.SerializedName
 
@@ -58,31 +59,44 @@ fun ResponseCinemaInfo.mapToEntity(cinemaInfo: CinemaInfo, cinema: String): Cine
     return CinemaInfoEntity(
         rowId = id + if (cinema == TV_SERIES) 1_000_000_000 else 0,
         id = this.id,
-        title = if (cinema == MOVIE) this.titleMovie!! else this.titleTvSeries!!,
-        posterPath = this.posterPath,
-        popularityWeight = this.popularityWeight,
-        releaseDate = this.releaseDate,
-        runtime = this.runtime,
-        overview = this.overview,
-        genresStr = cinemaInfo.genres ?: NO_DATA,
-        actorsStr = cinemaInfo.actors ?: NO_DATA,
-        cinema = cinema
+        title = setNoTitleIfNullOrEmpty(if (cinema == MOVIE) this.titleMovie else this.titleTvSeries),
+        posterPath = setNullIfEmpty(this.posterPath),
+        popularityWeight = this.popularityWeight ?: 0F,
+        releaseDate = setNullIfEmpty(this.releaseDate),
+        runtime = setNullIfEmpty(this.runtime),
+        overview = setNullIfEmpty(this.overview),
 
+        genresStr = setNullIfNoData(cinemaInfo.genres),
+        actorsStr = setNullIfNoData(cinemaInfo.actors),
+
+        cinema = cinema
     )
 }
 
 fun ResponseCinemaInfo.mapToCinemaInfo(responseCinemaActorsList: ResponseCinemaActorsList?): CinemaInfo {
     return CinemaInfo(
-        title = this.titleMovie ?: this.titleTvSeries,
-        releaseDate = this.releaseDate ?: NO_DATA,
-        runtime = this.runtime ?: NO_DATA,
-        genres = getGenres(this),
-        actors = responseCinemaActorsList?.let { getActors(it) } ?: NO_DATA,
-        oveview = this.overview ?: NO_DATA
+        title = setNoTitleIfNullOrEmpty(this.titleMovie ?: this.titleTvSeries),
+
+        releaseDate = setNoDataIfNullOrEmpty(this.releaseDate),
+        runtime = setNoDataIfNullOrEmpty(this.runtime),
+
+        genres = setNoDataIfNullOrEmpty(getGenres(this)),
+        actors = setNoDataIfNullOrEmpty(responseCinemaActorsList?.let { getActors(it) }),
+
+        oveview = setNoDataIfNullOrEmpty(this.overview)
     )
 }
 
-fun getActors(responseCinemaActorsList: ResponseCinemaActorsList): String {
+private fun setNullIfNoData(data: String) =
+    if (data == NO_DATA) null else data
+private fun setNullIfEmpty(data: String?) =
+    if (data.isNullOrEmpty()) null else data
+private fun setNoDataIfNullOrEmpty(data: String?) =
+    if (data.isNullOrEmpty()) NO_DATA else data
+private fun setNoTitleIfNullOrEmpty(data: String?) =
+    if (data.isNullOrEmpty()) NO_TITLE else data
+
+fun getActors(responseCinemaActorsList: ResponseCinemaActorsList): String? {
 
     if (responseCinemaActorsList.cast.isEmpty()) {
         return NO_DATA
@@ -98,15 +112,13 @@ fun getActors(responseCinemaActorsList: ResponseCinemaActorsList): String {
     }
 
     first.forEach { e -> strActors += "${e.name}, " }
-
-    return if (strActors != "") strActors.dropLast(2) else NO_DATA
+    return if (strActors.isNotEmpty()) strActors.dropLast(2) else null
 }
 
 
-fun getGenres(responseCinemaInfo: ResponseCinemaInfo): String {
+fun getGenres(responseCinemaInfo: ResponseCinemaInfo): String? {
     var strGenres = ""
-
     responseCinemaInfo.genres?.forEach { e -> strGenres += "${e.name}, " }
-    return strGenres.dropLast(2)
+    return if (strGenres.isNotEmpty()) strGenres.dropLast(2) else null
 }
 

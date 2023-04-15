@@ -54,8 +54,10 @@ class PostersUseCase @Inject constructor(
 
     @Volatile
     private var isCanUpdate = true
+
     @Volatile
     private var isMovieNotUpdated = true
+
     @Volatile
     private var isTvSeriesNotUpdated = true
 
@@ -265,11 +267,9 @@ class PostersUseCase @Inject constructor(
             }
             if (isNeedGetCinemaInfo) {
                 postersList.forEach { poster ->
-                    poster.id?.let { id ->
-                        cinemaInfoUseCase.getCinemaInfo(
-                            id, poster.cinema, false
-                        )
-                    }
+                    cinemaInfoUseCase.getCinemaInfo(
+                        poster.id, poster.cinema, false
+                    )
                 }
             }
         }

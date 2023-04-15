@@ -115,8 +115,8 @@ class CinemaInfoUseCase @Inject constructor(
 
     fun openCinemaInfo(poster: Poster, ma: MainActivity) {
         val intent = Intent(ma, CinemaInfoActivity::class.java)
-        intent.putExtra(Sys.ID_INT, poster.id ?: 0)
-        intent.putExtra(Sys.TITLE, poster.title ?: Sys.NO_DATA)
+        intent.putExtra(Sys.ID_INT, poster.id)
+        intent.putExtra(Sys.TITLE, poster.title)
         intent.putExtra(Sys.STAR_BOOLEAN, poster.favorite)
         intent.putExtra(Sys.CINEMA, poster.cinema)
         startActivity(ma, intent, null)
