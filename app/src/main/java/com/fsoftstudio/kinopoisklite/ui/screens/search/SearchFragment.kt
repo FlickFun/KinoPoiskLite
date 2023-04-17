@@ -26,8 +26,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fsoftstudio.kinopoisklite.ui.adapters.ListCinemaRcAdapter
 import com.fsoftstudio.kinopoisklite.databinding.FragmentSearchBinding
-import com.fsoftstudio.kinopoisklite.parameters.Sys.MOVIE
-import com.fsoftstudio.kinopoisklite.parameters.Sys.TV_SERIES
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.MOVIE
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TV_SERIES
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

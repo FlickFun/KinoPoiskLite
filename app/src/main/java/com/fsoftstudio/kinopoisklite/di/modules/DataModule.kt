@@ -15,25 +15,11 @@
  */
 package com.fsoftstudio.kinopoisklite.di.modules
 
-import com.fsoftstudio.kinopoisklite.data.base.TMDbRoomDatabase
-import com.fsoftstudio.kinopoisklite.data.request.local.AppLocalDataSource
-import com.fsoftstudio.kinopoisklite.data.request.remote.retrofit.RetrofitTMDbDataSource
-import com.fsoftstudio.kinopoisklite.data.request.remote.TMDbRemoteDataSource
-import com.fsoftstudio.kinopoisklite.data.request.remote.retrofit.TMDbApi
-import com.fsoftstudio.kinopoisklite.data.request.local.TMDbLocalDataSource
-import com.fsoftstudio.kinopoisklite.data.request.local.room.RoomTMDbDataSource
-import com.fsoftstudio.kinopoisklite.data.request.local.sharedprefs.SharedPrefsDataSource
-import com.fsoftstudio.kinopoisklite.data.request.local.sharedprefs.SharedPrefsRequest
-import com.fsoftstudio.kinopoisklite.data.request.remote.AppRemoteDataSource
-import com.fsoftstudio.kinopoisklite.data.request.remote.firebase.FireBaseApi
-import com.fsoftstudio.kinopoisklite.data.request.remote.firebase.FireBaseDataSource
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
 
 @Module
@@ -42,48 +28,6 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideLocalDataSource(
-        tMDbRoomDatabase: TMDbRoomDatabase
-    ): TMDbLocalDataSource =
-        RoomTMDbDataSource(tMDbRoomDatabase.tMDbDao(), tMDbRoomDatabase.tMDbFtsDao())
-
-    @Provides
-    @Singleton
-    fun provideAppLocalDataSource(
-        sharedPrefsRequest: SharedPrefsRequest
-    ): AppLocalDataSource =
-        SharedPrefsDataSource(sharedPrefsRequest)
-
-    @Provides
-    @Singleton
-    fun provideRemoteDataSource(
-        tMDbApi: TMDbApi
-    ): TMDbRemoteDataSource =
-        RetrofitTMDbDataSource(tMDbApi)
-
-    @Provides
-    @Singleton
-    fun provideAppRemoteDataSource(
-        fireBaseApi: FireBaseApi
-    ): AppRemoteDataSource =
-        FireBaseDataSource(fireBaseApi)
-
-    @Provides
-    @Singleton
     fun provideGson(): Gson = Gson()
 
-    @Provides
-    @Singleton
-    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
-        OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor)
-            .build()
-
-    @Provides
-    @Singleton
-    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
-        val httpLoggingInterceptor = HttpLoggingInterceptor()
-        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        return httpLoggingInterceptor
-    }
 }

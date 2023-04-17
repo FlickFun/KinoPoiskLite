@@ -33,7 +33,7 @@ import com.fsoftstudio.kinopoisklite.R
 import com.fsoftstudio.kinopoisklite.databinding.FragmentFavoriteBinding
 import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaFavoriteUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.UserProfileUseCase
-import com.fsoftstudio.kinopoisklite.parameters.Sys.FRAGMENT_FAVORITE
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.FRAGMENT_FAVORITE
 import com.fsoftstudio.kinopoisklite.ui.adapters.ListCinemaRcAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

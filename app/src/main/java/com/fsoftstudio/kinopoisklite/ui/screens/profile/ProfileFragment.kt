@@ -25,16 +25,16 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.fsoftstudio.kinopoisklite.R
+import com.fsoftstudio.kinopoisklite.data.SettingsDataRepository
 import com.fsoftstudio.kinopoisklite.databinding.FragmentProfileBinding
-import com.fsoftstudio.kinopoisklite.domain.data.DataRepository
 import com.fsoftstudio.kinopoisklite.domain.models.User
 import com.fsoftstudio.kinopoisklite.domain.usecase.AppUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.UserProfileUseCase
-import com.fsoftstudio.kinopoisklite.parameters.Sys.OK
-import com.fsoftstudio.kinopoisklite.parameters.Sys.THEME_BATTERY
-import com.fsoftstudio.kinopoisklite.parameters.Sys.THEME_DARK
-import com.fsoftstudio.kinopoisklite.parameters.Sys.THEME_LIGHT
-import com.fsoftstudio.kinopoisklite.parameters.Sys.THEME_SYSTEM
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.OK
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.THEME_BATTERY
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.THEME_DARK
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.THEME_LIGHT
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.THEME_SYSTEM
 import com.fsoftstudio.kinopoisklite.utils.ShowInfo
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -51,7 +51,7 @@ class ProfileFragment : Fragment() {
     lateinit var showInfo: ShowInfo
 
     @Inject
-    lateinit var dataRepository: DataRepository
+    lateinit var settingsDataRepository: SettingsDataRepository
 
     @Inject
     lateinit var appUseCase: AppUseCase
@@ -153,7 +153,7 @@ class ProfileFragment : Fragment() {
         } else {
             themeSystem.visibility = View.GONE
         }
-        when (dataRepository.getSavedTheme()) {
+        when (settingsDataRepository.getSavedTheme()) {
             THEME_LIGHT -> themeLight.isChecked = true
             THEME_DARK -> themeDark.isChecked = true
             THEME_SYSTEM -> themeSystem.isChecked = true
@@ -178,7 +178,7 @@ class ProfileFragment : Fragment() {
 
     private fun setTheme(themeMode: Int, prefsMode: Int) {
         AppCompatDelegate.setDefaultNightMode(themeMode)
-        dataRepository.saveTheme(prefsMode)
+        settingsDataRepository.saveTheme(prefsMode)
     }
 
 }

@@ -16,16 +16,17 @@
 package com.fsoftstudio.kinopoisklite.domain.usecase
 
 import android.util.Log
-import com.fsoftstudio.kinopoisklite.data.request.remote.responses.ResponseMoviesList
-import com.fsoftstudio.kinopoisklite.data.request.remote.responses.ResponseTvSeriesList
-import com.fsoftstudio.kinopoisklite.data.request.remote.responses.mapToPoster
-import com.fsoftstudio.kinopoisklite.domain.data.DataRepository
+import com.fsoftstudio.kinopoisklite.data.MoviesDataRepository
+import com.fsoftstudio.kinopoisklite.data.TvSeriesDataRepository
+import com.fsoftstudio.kinopoisklite.data.movies.entities.RetrofitMovieDataEntitiesList
+import com.fsoftstudio.kinopoisklite.data.tvseries.entities.RetrofitTvSeriesDataEntitiesList
+import com.fsoftstudio.kinopoisklite.domain.mappers.PosterMapper
 import com.fsoftstudio.kinopoisklite.domain.models.Poster
 import com.fsoftstudio.kinopoisklite.domain.ui.UiPosters
 import com.fsoftstudio.kinopoisklite.domain.usecase.ExceptionsUseCase.Companion.EXCEPTION_POSTERS
 import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinema
 import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinemaImp
-import com.fsoftstudio.kinopoisklite.parameters.Sys.TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER
 import com.fsoftstudio.kinopoisklite.ui.screens.home.HomeFlowViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -38,7 +39,9 @@ import javax.inject.Inject
 
 class PostersUseCase @Inject constructor(
     private val favoriteCinemaImp: FavoriteCinemaImp,
-    private val dataRepository: DataRepository,
+    private val moviesDataRepository: MoviesDataRepository,
+    private val tvSeriesDataRepository: TvSeriesDataRepository,
+    private val posterMapper: PosterMapper,
     private val uiPoster: UiPosters,
     private val cinemaInfoUseCase: CinemaInfoUseCase,
     private val exceptionsUseCase: ExceptionsUseCase
@@ -110,7 +113,7 @@ class PostersUseCase @Inject constructor(
             )
         }
         CoroutineScope(IO).launch(coroutineExceptionHandler) {
-            val result = dataRepository.getLocalMoviePosters()
+            val result = moviesDataRepository.getLocalMoviePosters()
             sendShowMoviePosters(result)
             if (isCanUpdate) {
                 updateMoviePosters()
@@ -145,10 +148,14 @@ class PostersUseCase @Inject constructor(
             )
         }
         updateMoviePostersJob = CoroutineScope(IO).launch(coroutineExceptionHandler) {
-            val response = dataRepository.getRemoteMoviePosters()
+            val response = moviesDataRepository.getRemoteMoviePosters()
 
             if (response.isSuccessful) {
-                sendShowMoviePosters(response.body())
+                response.body()?.results?.let {
+                    sendShowMoviePosters(
+                        RetrofitMovieDataEntitiesList(results = it.take(9))
+                    )
+                }
                 isMovieNotUpdated = false
 
             } else {
@@ -164,11 +171,10 @@ class PostersUseCase @Inject constructor(
     }
 
     private fun sendShowMoviePosters(
-        responseMoviesList: ResponseMoviesList?
+        responseMoviesList: RetrofitMovieDataEntitiesList?
     ) {
         responseMoviesList?.let {
-            val postersList = it.results.take(9)
-                .map { responseMoviesPopular -> responseMoviesPopular.mapToPoster() }
+            val postersList = posterMapper.fromRetrofitMoviePosterDataEntityList(it.results)
             if (isNotSameList(postersList, moviePosters)) {
                 if (isNotNotifyCheckChangePostersWorker) {
                     uiPoster.showPostersMovie(
@@ -187,7 +193,7 @@ class PostersUseCase @Inject constructor(
 
     private fun getTvSeriesPosters() =
         compositeDisposable!!.add(
-            dataRepository.getLocalTvSeriesPosters()
+            tvSeriesDataRepository.getLocalTvSeriesPosters()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -215,7 +221,7 @@ class PostersUseCase @Inject constructor(
 
     private fun updateTvSeriesPosters() =
         compositeDisposable!!.add(
-            dataRepository.getRemoteTvSeriesPosters()
+            tvSeriesDataRepository.getRemoteTvSeriesPosters()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -226,9 +232,11 @@ class PostersUseCase @Inject constructor(
         )
 
     private fun sendShowTvSeriesPosters(
-        responseTvSeriesList: ResponseTvSeriesList
+        retrofitTvSeriesDataEntitiesList: RetrofitTvSeriesDataEntitiesList
     ) {
-        val postersList = responseTvSeriesList.results.take(9).map { it.mapToPoster() }
+        val postersList = posterMapper.fromRetrofitTvSeriesPosterDataEntityList(
+            retrofitTvSeriesDataEntitiesList.results
+        )
         if (isNotSameList(postersList, tvSeriesPosters)) {
             if (isNotNotifyCheckChangePostersWorker) {
                 uiPoster.showPostersTvSeries(
@@ -279,11 +287,11 @@ class PostersUseCase @Inject constructor(
         isNeedNotificationThatDataChanged = true
     }
 
-    override fun addFavoriteCinemaToFavoritesList(id: Int) {
-        favoriteCinemaImp.addFavoriteCinemaToFavoritesList(id)
+    override fun addFavoritesCinemaToFavoritesList(id: Int) {
+        favoriteCinemaImp.addFavoritesCinemaToFavoritesList(id)
     }
 
-    override fun deleteFavoriteCinemaFromFavoritesList(id: Int) {
-        favoriteCinemaImp.deleteFavoriteCinemaFromFavoritesList(id)
+    override fun deleteFavoritesCinemaFromFavoritesList(id: Int) {
+        favoriteCinemaImp.deleteFavoritesCinemaFromFavoritesList(id)
     }
 }

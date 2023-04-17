@@ -16,14 +16,17 @@
 package com.fsoftstudio.kinopoisklite.domain.usecase
 
 import android.annotation.SuppressLint
-import com.fsoftstudio.kinopoisklite.domain.data.DataRepository
+import com.fsoftstudio.kinopoisklite.data.AccountsDataRepository
+import com.fsoftstudio.kinopoisklite.data.FavoritesDataRepository
+import com.fsoftstudio.kinopoisklite.domain.mappers.UserMapper
 import com.fsoftstudio.kinopoisklite.domain.models.User
+import com.fsoftstudio.kinopoisklite.domain.models.mapToRoomUserDataEntity
 import com.fsoftstudio.kinopoisklite.domain.ui.UiUserProfile
-import com.fsoftstudio.kinopoisklite.parameters.Sys.ERROR_EMPTY_FIELD
-import com.fsoftstudio.kinopoisklite.parameters.Sys.ERROR_LOGIN_ALREADY_EXIST
-import com.fsoftstudio.kinopoisklite.parameters.Sys.ERROR_WRONG_LOGIN_ORE_PASSWORD
-import com.fsoftstudio.kinopoisklite.parameters.Sys.LOGIN_GUEST
-import com.fsoftstudio.kinopoisklite.parameters.Sys.OK
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ERROR_EMPTY_FIELD
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ERROR_LOGIN_ALREADY_EXIST
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ERROR_WRONG_LOGIN_ORE_PASSWORD
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.LOGIN_GUEST
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.OK
 import com.fsoftstudio.kinopoisklite.ui.screens.profile.ProfileViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -31,7 +34,9 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class UserProfileUseCase @Inject constructor(
-    private val dataRepository: DataRepository,
+    private val accountsDataRepository: AccountsDataRepository,
+    private val favoritesDataRepository: FavoritesDataRepository,
+    private val userMapper: UserMapper,
     private val uiUserProfile: UiUserProfile
 ) {
 
@@ -39,11 +44,11 @@ class UserProfileUseCase @Inject constructor(
 
     fun loadUserAndFavorite(compositeDisposable: CompositeDisposable) {
         compositeDisposable.add(
-            dataRepository.getLoggedUserInfo()
+            accountsDataRepository.getLoggedUserInfo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    user = it
+                    user = userMapper.fromRoomUserDataEntity(it)
                     loadIdFavoriteCinemaIdsListToHashMap(it.login)
                 }, {
                     user = null
@@ -53,7 +58,7 @@ class UserProfileUseCase @Inject constructor(
     }
 
     private fun loadIdFavoriteCinemaIdsListToHashMap(login: String) =
-        dataRepository.loadAllFavoriteEntitiesIdsByLogin(login)
+        favoritesDataRepository.loadAllFavoritesEntitiesIdsByLogin(login)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -71,12 +76,12 @@ class UserProfileUseCase @Inject constructor(
 
         if (checkFields(user)) {
             compositeDisposable.add(
-                dataRepository.getUserInfo(user.login)
+                accountsDataRepository.getUserInfo(user.login)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         if (user.logged) {
-                            login(user, it, compositeDisposable)
+                            login(user, userMapper.fromRoomUserDataEntity(it), compositeDisposable)
                         } else {
                             sendResultMessage(ERROR_LOGIN_ALREADY_EXIST)
                         }
@@ -118,11 +123,11 @@ class UserProfileUseCase @Inject constructor(
     @SuppressLint("CheckResult")
     private fun saveLoginUserToDb(user: User, compositeDisposable: CompositeDisposable) {
         saveUserInfoToDb(user, true, compositeDisposable) { savedUser ->
-            dataRepository.getUserInfo(savedUser.login)
+            accountsDataRepository.getUserInfo(savedUser.login)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    UserProfileUseCase.user = it
+                    UserProfileUseCase.user = userMapper.fromRoomUserDataEntity(it)
                     loadIdFavoriteCinemaIdsListToHashMap(it.login)
                     sendResultMessage(OK)
                 }
@@ -143,7 +148,7 @@ class UserProfileUseCase @Inject constructor(
             logged = logged
         )
         compositeDisposable.add(
-            dataRepository.saveUserInfo(savedUser)
+            accountsDataRepository.saveUserInfo(savedUser.mapToRoomUserDataEntity())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({

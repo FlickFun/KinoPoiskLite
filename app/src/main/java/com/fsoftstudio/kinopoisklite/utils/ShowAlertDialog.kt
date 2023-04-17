@@ -16,9 +16,9 @@
 package com.fsoftstudio.kinopoisklite.utils
 import android.content.Context
 import com.fsoftstudio.kinopoisklite.R
-import com.fsoftstudio.kinopoisklite.parameters.Sys.BOOT_AUTO_START_ASC_LATE
-import com.fsoftstudio.kinopoisklite.parameters.Sys.BOOT_AUTO_START_DO_NOT_ASC
-import com.fsoftstudio.kinopoisklite.parameters.Sys.BOOT_AUTO_START_OPEN_SETTINGS
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.BOOT_AUTO_START_ASC_LATE
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.BOOT_AUTO_START_DO_NOT_ASC
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.BOOT_AUTO_START_OPEN_SETTINGS
 import com.fsoftstudio.kinopoisklite.ui.screens.MainActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 

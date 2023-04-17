@@ -15,7 +15,7 @@
  */
 package com.fsoftstudio.kinopoisklite.domain.models
 
-import com.fsoftstudio.kinopoisklite.data.request.local.room.dao.UserEntity
+import com.fsoftstudio.kinopoisklite.data.accounts.entities.RoomUserDataEntity
 
 data class User(
     var id: Int,
@@ -24,8 +24,8 @@ data class User(
     val logged: Boolean
 )
 
-fun User.mapToUserEntity(): UserEntity {
-    return UserEntity(
+fun User.mapToRoomUserDataEntity(): RoomUserDataEntity {
+    return RoomUserDataEntity(
         id = this.id,
         login = this.login,
         password = this.password,

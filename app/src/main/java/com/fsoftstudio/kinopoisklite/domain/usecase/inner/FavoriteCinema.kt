@@ -16,6 +16,6 @@
 package com.fsoftstudio.kinopoisklite.domain.usecase.inner
 
 interface FavoriteCinema {
-    fun addFavoriteCinemaToFavoritesList(id: Int)
-    fun deleteFavoriteCinemaFromFavoritesList(id: Int)
+    fun addFavoritesCinemaToFavoritesList(id: Int)
+    fun deleteFavoritesCinemaFromFavoritesList(id: Int)
 }

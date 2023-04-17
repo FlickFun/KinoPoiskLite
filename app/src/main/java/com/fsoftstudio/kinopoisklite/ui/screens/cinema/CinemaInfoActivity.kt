@@ -26,15 +26,15 @@ import com.fsoftstudio.kinopoisklite.databinding.ActivityCinemaInfoBinding
 import com.fsoftstudio.kinopoisklite.domain.usecase.AppUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.CinemaInfoUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaFavoriteUseCase
-import com.fsoftstudio.kinopoisklite.parameters.Sys.CINEMA
-import com.fsoftstudio.kinopoisklite.parameters.Sys.ID_INT
-import com.fsoftstudio.kinopoisklite.parameters.Sys.JPG
-import com.fsoftstudio.kinopoisklite.parameters.Sys.LOCAL_POSTERS_FILES_PATH
-import com.fsoftstudio.kinopoisklite.parameters.Sys.MIN
-import com.fsoftstudio.kinopoisklite.parameters.Sys.NOTHING
-import com.fsoftstudio.kinopoisklite.parameters.Sys.NO_DATA
-import com.fsoftstudio.kinopoisklite.parameters.Sys.STAR_BOOLEAN
-import com.fsoftstudio.kinopoisklite.parameters.Sys.TITLE
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.CINEMA
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ID_INT
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.JPG
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.LOCAL_POSTERS_FILES_PATH
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.MIN
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTHING
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NO_DATA
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.STAR_BOOLEAN
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TITLE
 import com.fsoftstudio.kinopoisklite.utils.ShowInfo
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -103,11 +103,11 @@ class CinemaInfoActivity : AppCompatActivity() {
 
         ibSwitchFavoriteCinema.setOnClickListener {
             if (ListCinemaFavoriteUseCase.favorite?.contains(id) == true) {
-                cinemaInfoUseCase.deleteFavoriteCinemaFromFavoritesList(id)
+                cinemaInfoUseCase.deleteFavoritesCinemaFromFavoritesList(id)
                 ibSwitchFavoriteCinema.setImageDrawable(binding.root.context.getDrawable(R.drawable.round_star_border_24))
 
             } else {
-                cinemaInfoUseCase.addFavoriteCinemaToFavoritesList(id)
+                cinemaInfoUseCase.addFavoritesCinemaToFavoritesList(id)
                 ibSwitchFavoriteCinema.setImageDrawable(binding.root.context.getDrawable(R.drawable.round_star_24))
             }
         }

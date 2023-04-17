@@ -17,8 +17,8 @@ package com.fsoftstudio.kinopoisklite.workers
 
 import android.content.Context
 import androidx.work.*
-import com.fsoftstudio.kinopoisklite.parameters.Sys.NOTIFICATION_WORK
-import com.fsoftstudio.kinopoisklite.parameters.Sys.TAG_OUTPUT
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTIFICATION_WORK
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TAG_OUTPUT
 import java.util.concurrent.TimeUnit
 
 class InitNotifyCheckChangePostersWorker(private val application: Context) {

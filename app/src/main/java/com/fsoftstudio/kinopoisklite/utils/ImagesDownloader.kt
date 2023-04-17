@@ -18,9 +18,9 @@ package com.fsoftstudio.kinopoisklite.utils
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
-import com.fsoftstudio.kinopoisklite.parameters.Sys.JPG
-import com.fsoftstudio.kinopoisklite.parameters.Sys.LOCAL_POSTERS_FILES_PATH
-import com.fsoftstudio.kinopoisklite.parameters.Sys.URI_PATH
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.JPG
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.LOCAL_POSTERS_FILES_PATH
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.URI_PATH
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

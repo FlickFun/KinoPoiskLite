@@ -31,14 +31,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.fsoftstudio.kinopoisklite.R
+import com.fsoftstudio.kinopoisklite.data.SettingsDataRepository
 import com.fsoftstudio.kinopoisklite.databinding.ActivityMainBinding
-import com.fsoftstudio.kinopoisklite.domain.data.DataRepository
 import com.fsoftstudio.kinopoisklite.domain.models.Poster
 import com.fsoftstudio.kinopoisklite.domain.usecase.AppUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.CinemaInfoUseCase
-import com.fsoftstudio.kinopoisklite.parameters.Sys.BOOT_AUTO_START_ASC_LATE
-import com.fsoftstudio.kinopoisklite.parameters.Sys.BOOT_AUTO_START_DO_NOT_ASC
-import com.fsoftstudio.kinopoisklite.parameters.Sys.BOOT_AUTO_START_OPEN_SETTINGS
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.BOOT_AUTO_START_ASC_LATE
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.BOOT_AUTO_START_DO_NOT_ASC
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.BOOT_AUTO_START_OPEN_SETTINGS
 import com.fsoftstudio.kinopoisklite.utils.BootAutostartPermissionHelper
 import com.fsoftstudio.kinopoisklite.utils.ShowAlertDialog
 import com.fsoftstudio.kinopoisklite.utils.ShowInfo
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var showInfo: ShowInfo
 
     @Inject
-    lateinit var dataRepository: DataRepository
+    lateinit var settingsDataRepository: SettingsDataRepository
 
     @Inject
     lateinit var cinemaInfoUseCase: CinemaInfoUseCase
@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
     fun showAlertDialogAndSaveResult(keyBootAutoStart: Int) {
         when (keyBootAutoStart) {
             BOOT_AUTO_START_DO_NOT_ASC, BOOT_AUTO_START_ASC_LATE -> {
-                dataRepository.saveBootAutoStart(keyBootAutoStart)
+                settingsDataRepository.saveBootAutoStart(keyBootAutoStart)
             }
             BOOT_AUTO_START_OPEN_SETTINGS -> {
                 BootAutostartPermissionHelper.getInstance().getAutoStartPermission(
@@ -178,7 +178,7 @@ class MainActivity : AppCompatActivity() {
                         newTask = false
                     )
                 )
-                    dataRepository.saveBootAutoStart(
+                    settingsDataRepository.saveBootAutoStart(
                         if (BootAutostartPermissionHelper.getInstance()
                                 .isAutoStartEnabled(this@MainActivity)
                         )

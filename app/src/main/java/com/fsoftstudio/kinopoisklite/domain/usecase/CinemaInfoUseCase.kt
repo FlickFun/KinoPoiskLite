@@ -17,15 +17,15 @@ package com.fsoftstudio.kinopoisklite.domain.usecase
 
 import android.content.Intent
 import androidx.core.content.ContextCompat.startActivity
-import com.fsoftstudio.kinopoisklite.data.request.remote.responses.mapToCinemaInfo
-import com.fsoftstudio.kinopoisklite.domain.data.DataRepository
+import com.fsoftstudio.kinopoisklite.data.CinemaDataRepository
+import com.fsoftstudio.kinopoisklite.domain.mappers.CinemaInfoMapper
 import com.fsoftstudio.kinopoisklite.domain.models.CinemaInfo
 import com.fsoftstudio.kinopoisklite.domain.models.Poster
 import com.fsoftstudio.kinopoisklite.domain.ui.UiCinemaInfo
 import com.fsoftstudio.kinopoisklite.domain.usecase.ExceptionsUseCase.Companion.EXCEPTION_CINEMA_INFO
 import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinema
 import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinemaImp
-import com.fsoftstudio.kinopoisklite.parameters.Sys
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp
 import com.fsoftstudio.kinopoisklite.ui.screens.MainActivity
 import com.fsoftstudio.kinopoisklite.ui.screens.cinema.CinemaInfoActivity
 import com.fsoftstudio.kinopoisklite.ui.screens.cinema.CinemaViewModel
@@ -36,7 +36,8 @@ import javax.inject.Inject
 
 class CinemaInfoUseCase @Inject constructor(
     private val favoriteCinemaImp: FavoriteCinemaImp,
-    private val dataRepository: DataRepository,
+    private val cinemaDataRepository: CinemaDataRepository,
+    private val cinemaInfoMapper: CinemaInfoMapper,
     private val uiCinemaInfo: UiCinemaInfo,
     private val exceptionsUseCase: ExceptionsUseCase
 ) : FavoriteCinema {
@@ -61,7 +62,9 @@ class CinemaInfoUseCase @Inject constructor(
             updateCinemaInfo(id, cinema, isNeedUpdateIfCalledFromCinemaInfoActivityAndShow)
         }
         CoroutineScope(Dispatchers.IO).launch(coroutineExceptionHandler) {
-            val cinemaInfo = dataRepository.getLocalCinemaInfo(id, cinema)
+            val cinemaInfo = cinemaInfoMapper.fromRoomCinemaInfoDataEntity(
+                cinemaDataRepository.getLocalCinemaInfo(id, cinema)
+            )
             if (isNeedUpdateIfCalledFromCinemaInfoActivityAndShow) {
                 sendShowCinemaInfo(cinemaInfo)
                 updateCinemaInfo(id, cinema, isNeedUpdateIfCalledFromCinemaInfoActivityAndShow)
@@ -75,19 +78,23 @@ class CinemaInfoUseCase @Inject constructor(
         }
         CoroutineScope(Dispatchers.IO).launch(coroutineExceptionHandler) {
 
-            val responseCinemaInfo = async { dataRepository.getRemoteCinemaInfo(id, cinema) }
-            if (responseCinemaInfo.await().isSuccessful) {
-                responseCinemaInfo.await().body()?.let {
-                    val responseCinemaActorsList =
-                        async { dataRepository.getRemoteCinemaActorsList(id, cinema) }
-                    if (responseCinemaActorsList.await().isSuccessful) {
+            val remoteCinemaInfo = async { cinemaDataRepository.getRemoteCinemaInfo(id, cinema) }
+            if (remoteCinemaInfo.await().isSuccessful) {
+                remoteCinemaInfo.await().body()?.let {
+                    val remoteCinemaActorsList =
+                        async { cinemaDataRepository.getRemoteCinemaActorsList(id, cinema) }
+                    if (remoteCinemaActorsList.await().isSuccessful) {
 
-                        val cinemaInfo = responseCinemaInfo.await().body()!!
-                            .mapToCinemaInfo(responseCinemaActorsList.await().body())
-                        dataRepository.saveLocalCinemaInfo(
-                            responseCinemaInfo.await().body()!!,
-                            cinemaInfo,
-                            cinema
+                        val cinemaInfo = cinemaInfoMapper.fromRetrofitCinemaInfoDataEntity(
+                            remoteCinemaInfo.await().body()!!,
+                            remoteCinemaActorsList.await().body()
+                        )
+                        cinemaDataRepository.saveLocalCinemaInfo(
+                            cinemaInfoMapper.fromRetrofitToRoomCinemaInfoDataEntity(
+                                remoteCinemaInfo.await().body()!!,
+                                cinemaInfo,
+                                cinema
+                            )
                         )
 
                         if (needShow) {
@@ -96,8 +103,8 @@ class CinemaInfoUseCase @Inject constructor(
                     } else {
                         exceptionsUseCase.showHttpExceptionInfo(
                             EXCEPTION_CINEMA_INFO,
-                            responseCinemaActorsList.await().code(),
-                            (responseCinemaActorsList.await().errorBody() as ResponseBody).string(),
+                            remoteCinemaActorsList.await().code(),
+                            (remoteCinemaActorsList.await().errorBody() as ResponseBody).string(),
                             cinemaViewModel
                         )
                     }
@@ -105,8 +112,8 @@ class CinemaInfoUseCase @Inject constructor(
             } else {
                 exceptionsUseCase.showHttpExceptionInfo(
                     EXCEPTION_CINEMA_INFO,
-                    responseCinemaInfo.await().code(),
-                    (responseCinemaInfo.await().errorBody() as ResponseBody).string(),
+                    remoteCinemaInfo.await().code(),
+                    (remoteCinemaInfo.await().errorBody() as ResponseBody).string(),
                     cinemaViewModel
                 )
             }
@@ -115,10 +122,10 @@ class CinemaInfoUseCase @Inject constructor(
 
     fun openCinemaInfo(poster: Poster, ma: MainActivity) {
         val intent = Intent(ma, CinemaInfoActivity::class.java)
-        intent.putExtra(Sys.ID_INT, poster.id)
-        intent.putExtra(Sys.TITLE, poster.title)
-        intent.putExtra(Sys.STAR_BOOLEAN, poster.favorite)
-        intent.putExtra(Sys.CINEMA, poster.cinema)
+        intent.putExtra(ConstApp.ID_INT, poster.id)
+        intent.putExtra(ConstApp.TITLE, poster.title)
+        intent.putExtra(ConstApp.STAR_BOOLEAN, poster.favorite)
+        intent.putExtra(ConstApp.CINEMA, poster.cinema)
         startActivity(ma, intent, null)
     }
 
@@ -128,11 +135,11 @@ class CinemaInfoUseCase @Inject constructor(
         }
 
 
-    override fun addFavoriteCinemaToFavoritesList(id: Int) {
-        favoriteCinemaImp.addFavoriteCinemaToFavoritesList(id)
+    override fun addFavoritesCinemaToFavoritesList(id: Int) {
+        favoriteCinemaImp.addFavoritesCinemaToFavoritesList(id)
     }
 
-    override fun deleteFavoriteCinemaFromFavoritesList(id: Int) {
-        favoriteCinemaImp.deleteFavoriteCinemaFromFavoritesList(id)
+    override fun deleteFavoritesCinemaFromFavoritesList(id: Int) {
+        favoriteCinemaImp.deleteFavoritesCinemaFromFavoritesList(id)
     }
 }

@@ -20,14 +20,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.fsoftstudio.kinopoisklite.parameters.Sys
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp
 import com.fsoftstudio.kinopoisklite.workers.InitNotifyCheckChangePostersWorker
 
 class BootBroadcast : BroadcastReceiver() {
     @SuppressLint("UnsafeProtectedBroadcastReceiver")
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.i(
-            Sys.TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER,
+            ConstApp.TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER,
             "Enter BroadcastReceiver() -> "
         )
         InitNotifyCheckChangePostersWorker(context?.applicationContext!!).checkPosters()

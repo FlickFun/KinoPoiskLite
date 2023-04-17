@@ -15,6 +15,7 @@
  */
 package com.fsoftstudio.kinopoisklite.domain.usecase
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
@@ -27,14 +28,15 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import com.fsoftstudio.kinopoisklite.R
-import com.fsoftstudio.kinopoisklite.domain.data.DataRepository
+import com.fsoftstudio.kinopoisklite.data.SettingsDataRepository
+import com.fsoftstudio.kinopoisklite.data.settings.entity.ApiKey
 import com.fsoftstudio.kinopoisklite.domain.ui.UiPosters
-import com.fsoftstudio.kinopoisklite.parameters.Sys.BOOT_AUTO_START_ASC_LATE
-import com.fsoftstudio.kinopoisklite.parameters.Sys.ERROR_NO_API_KEY_PLEASE_INFORM_DEV
-import com.fsoftstudio.kinopoisklite.parameters.Sys.NOTHING
-import com.fsoftstudio.kinopoisklite.parameters.Sys.PLEASE_INFORM_DEV
-import com.fsoftstudio.kinopoisklite.parameters.Sys.THEME_DARK
-import com.fsoftstudio.kinopoisklite.parameters.Sys.THEME_SYSTEM
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.BOOT_AUTO_START_ASC_LATE
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ERROR_NO_API_KEY_PLEASE_INFORM_DEV
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTHING
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.PLEASE_INFORM_DEV
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.THEME_DARK
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.THEME_SYSTEM
 import com.fsoftstudio.kinopoisklite.ui.screens.MainActivity
 import com.fsoftstudio.kinopoisklite.utils.BootAutostartPermissionHelper
 import com.fsoftstudio.kinopoisklite.utils.ShowInfo
@@ -46,10 +48,10 @@ import javax.inject.Inject
 
 class AppUseCase @Inject constructor(
     private val userProfileUseCase: UserProfileUseCase,
-    private val dataRepository: DataRepository,
     private val exceptionsUseCase: ExceptionsUseCase,
     private val showInfo: ShowInfo,
-    private val uiPoster: UiPosters
+    private val uiPoster: UiPosters,
+    private val settingsDataRepository: SettingsDataRepository
 ) {
 
     fun appStarted(ma: MainActivity, compositeDisposable: CompositeDisposable) {
@@ -60,7 +62,7 @@ class AppUseCase @Inject constructor(
     }
 
     fun setTheme(callback: (Boolean) -> Unit) {
-        val savedTheme = dataRepository.getSavedTheme()
+        val savedTheme = settingsDataRepository.getSavedTheme()
         val defaultNightMode = AppCompatDelegate.getDefaultNightMode()
         if (savedTheme == THEME_SYSTEM && defaultNightMode != MODE_NIGHT_YES || savedTheme != THEME_DARK ) {
             callback.invoke(true)
@@ -70,6 +72,7 @@ class AppUseCase @Inject constructor(
         }
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     fun checkStatusBarColorDark(activity: AppCompatActivity) {
         val window: Window = activity.window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -81,7 +84,7 @@ class AppUseCase @Inject constructor(
     }
 
     fun needOpenTelegramDev(parentFragment: Fragment?) {
-        dataRepository.getTelegramDev()?.let { telegramDev ->
+        settingsDataRepository.getTelegramDev()?.let { telegramDev ->
             if (telegramDev.isNotEmpty() && telegramDev != NOTHING) {
                 try {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(telegramDev))
@@ -98,7 +101,7 @@ class AppUseCase @Inject constructor(
     private fun checkForAscBootAutoStart(ma: MainActivity) {
         CoroutineScope(Dispatchers.Main).launch {
             if (BootAutostartPermissionHelper.getInstance().isAutoStartPermissionAvailable(ma, true)
-                && dataRepository.getBootAutoStart() == BOOT_AUTO_START_ASC_LATE
+                && settingsDataRepository.getBootAutoStart() == BOOT_AUTO_START_ASC_LATE
                 && !BootAutostartPermissionHelper.getInstance().isAutoStartEnabled(ma)
             ) {
                 delay(60_000L)
@@ -106,7 +109,6 @@ class AppUseCase @Inject constructor(
             }
         }
     }
-
 
     private fun checkAndCreateDir(ma: MainActivity) {
         var folder: File
@@ -120,12 +122,12 @@ class AppUseCase @Inject constructor(
 
     fun setApiKey(isNotNotifyCheckChangePostersWorker: Boolean = true) {
         CoroutineScope(Dispatchers.IO).launch {
-            val appData = dataRepository.getAppData().firstOrNull()
+            val appData = settingsDataRepository.getAppData().firstOrNull()
 
             appData?.let {
                 if (appData.errorMessage == null) {
                     if (appData.api_key != null) {
-                        apiKey = appData.api_key
+                        ApiKey.setApiKey(appData.api_key.toString())
                         isCanUpdate = true
                     } else {
                         if (isNotNotifyCheckChangePostersWorker) {
@@ -138,7 +140,7 @@ class AppUseCase @Inject constructor(
                     }
                 }
                 if (isNotNotifyCheckChangePostersWorker) {
-                    appData.telegram_dev?.let { dataRepository.saveTelegramDev(it) }
+                    appData.telegram_dev?.let { settingsDataRepository.saveTelegramDev(it) }
                 }
             }
         }
@@ -154,9 +156,5 @@ class AppUseCase @Inject constructor(
 
         @JvmStatic
         var isCanUpdate = false
-
-        @JvmStatic
-        var apiKey = NOTHING
-
     }
 }

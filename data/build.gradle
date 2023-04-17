@@ -1,0 +1,104 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    signingConfigs {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+        release {
+            storeFile file(properties.getProperty('appPrivateKey'))
+            keyAlias properties.getProperty('keyAlias')
+            storePassword properties.getProperty('storePassword')
+            keyPassword properties.getProperty('keyPassword')
+        }
+    }
+    namespace 'com.fsoftstudio.kinopoisklite.data'
+    compileSdk compileAndroidSdk
+
+    defaultConfig {
+        minSdk minAndroidSdk
+        targetSdk targetAndroidSdk
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
+                        "room.incremental"     : "true",
+                        "room.expandProjection": "true"
+                ]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+//            isShrinkResources = true
+            minifyEnabled = true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+//            isShrinkResources = false
+            minifyEnabled = false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation Libs.Android.CoreKtx
+    implementation Libs.Android.ActivityKtx
+    implementation Libs.Android.AppCompat
+    implementation Libs.Google.Material
+
+    // hilt
+    implementation Libs.Google.Hilt
+    kapt Libs.Google.HiltCompilerKapt
+    kapt Libs.Android.HiltWork
+
+    // rxjava3
+    implementation Libs.Reactivex.Rxjava3Rxjava
+
+    // room
+    implementation Libs.Android.RoomRuntime
+    annotationProcessor Libs.Android.RoomCompilerAnnotationProcessor
+    kapt Libs.Android.RoomCompilerKapt
+    implementation Libs.Android.RoomKtx
+    implementation Libs.Android.RoomRxjava3
+
+    // retrofit2
+    implementation Libs.Squareup.Retrofit2
+    implementation Libs.Squareup.retrofit2ConverterGson
+    implementation Libs.Squareup.retrofit2AdapterRxjava3
+
+    // okhttp3
+    implementation Libs.Squareup.okhttp3
+    implementation Libs.Squareup.okhttp3LoggingInterceptor
+
+    // firebase
+    implementation platform(Libs.Google.firebaseBom)
+    implementation Libs.Google.firebasedatabaseKtx
+
+    // tests
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+}

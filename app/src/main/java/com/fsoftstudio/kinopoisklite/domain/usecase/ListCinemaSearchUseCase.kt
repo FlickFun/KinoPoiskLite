@@ -15,10 +15,11 @@
  */
 package com.fsoftstudio.kinopoisklite.domain.usecase
 
-import com.fsoftstudio.kinopoisklite.data.request.remote.responses.ResponseMoviesList
-import com.fsoftstudio.kinopoisklite.data.request.remote.responses.ResponseTvSeriesList
-import com.fsoftstudio.kinopoisklite.data.request.remote.responses.mapToPoster
-import com.fsoftstudio.kinopoisklite.domain.data.DataRepository
+import com.fsoftstudio.kinopoisklite.data.MoviesDataRepository
+import com.fsoftstudio.kinopoisklite.data.TvSeriesDataRepository
+import com.fsoftstudio.kinopoisklite.data.movies.entities.RetrofitMovieDataEntitiesList
+import com.fsoftstudio.kinopoisklite.data.tvseries.entities.RetrofitTvSeriesDataEntitiesList
+import com.fsoftstudio.kinopoisklite.domain.mappers.PosterMapper
 import com.fsoftstudio.kinopoisklite.domain.ui.UiListCinemaSearch
 import com.fsoftstudio.kinopoisklite.domain.usecase.ExceptionsUseCase.Companion.EXCEPTION_LIST_CINEMA_SEARCH
 import com.fsoftstudio.kinopoisklite.domain.usecase.ExceptionsUseCase.Companion.EXCEPTION_POSTERS
@@ -36,7 +37,9 @@ import javax.inject.Inject
 class ListCinemaSearchUseCase @Inject constructor(
     private val favoriteCinemaImp: FavoriteCinemaImp,
     private val cinemaInfoUseCase: CinemaInfoUseCase,
-    private val dataRepository: DataRepository,
+    private val moviesDataRepository: MoviesDataRepository,
+    private val tvSeriesDataRepository: TvSeriesDataRepository,
+    private val posterMapper: PosterMapper,
     private val uiListCinemaSearch: UiListCinemaSearch,
     private val exceptionsUseCase: ExceptionsUseCase
 ) : FavoriteCinema {
@@ -57,7 +60,7 @@ class ListCinemaSearchUseCase @Inject constructor(
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ ->
         }
         CoroutineScope(Dispatchers.IO).launch(coroutineExceptionHandler) {
-            dataRepository.getLocalListMovieSearch(searchText).collectLatest {
+            moviesDataRepository.getLocalListMovieSearch(searchText).collectLatest {
                 if (it.results.isNotEmpty()) {
                     sendShowMovie(it)
                     updateMovies(searchText, false)
@@ -80,7 +83,7 @@ class ListCinemaSearchUseCase @Inject constructor(
                 }
             }
             movie = CoroutineScope(Dispatchers.IO).launch(coroutineExceptionHandler) {
-                val response = dataRepository.getRemoteListMovieSearch(searchText)
+                val response = moviesDataRepository.getRemoteListMovieSearch(searchText)
                 if (response.isSuccessful) {
 
                     if (response.body()?.results?.isNotEmpty() == true) {
@@ -108,9 +111,9 @@ class ListCinemaSearchUseCase @Inject constructor(
         update()
     }
 
-    private fun sendShowMovie(responseMoviesList: ResponseMoviesList) =
+    private fun sendShowMovie(responseMoviesList: RetrofitMovieDataEntitiesList) =
         uiListCinemaSearch.showListMovie(
-            responseMoviesList.results.map { moviePoster -> moviePoster.mapToPoster() },
+            posterMapper.fromRetrofitMoviePosterDataEntityList(responseMoviesList.results),
             searchViewModel!!
         )
 
@@ -118,7 +121,7 @@ class ListCinemaSearchUseCase @Inject constructor(
 
     private fun getTvSeries(compositeDisposable: CompositeDisposable, searchText: String) =
         compositeDisposable.add(
-            dataRepository.getLocalListTvSeriesSearch(searchText)
+            tvSeriesDataRepository.getLocalListTvSeriesSearch(searchText)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -139,7 +142,7 @@ class ListCinemaSearchUseCase @Inject constructor(
         isNoHasData: Boolean
     ) =
         compositeDisposable.add(
-            dataRepository.getRemoteListTvSeriesSearch(searchText)
+            tvSeriesDataRepository.getRemoteListTvSeriesSearch(searchText)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -157,9 +160,9 @@ class ListCinemaSearchUseCase @Inject constructor(
                 })
         )
 
-    private fun sendShowTvSeries(responseTvSeriesList: ResponseTvSeriesList) {
+    private fun sendShowTvSeries(responseTvSeriesList: RetrofitTvSeriesDataEntitiesList) {
         uiListCinemaSearch.showListTvSeriesList(
-            responseTvSeriesList.results.map { it.mapToPoster() },
+            posterMapper.fromRetrofitTvSeriesPosterDataEntityList(responseTvSeriesList.results),
             searchViewModel!!
         )
     }
@@ -170,15 +173,16 @@ class ListCinemaSearchUseCase @Inject constructor(
         cinemaInfoUseCase.getCinemaInfo(id, cinema, false)
     }
 
-    override fun addFavoriteCinemaToFavoritesList(id: Int) {
-        favoriteCinemaImp.addFavoriteCinemaToFavoritesList(id)
+    override fun addFavoritesCinemaToFavoritesList(id: Int) {
+        favoriteCinemaImp.addFavoritesCinemaToFavoritesList(id)
     }
 
-    override fun deleteFavoriteCinemaFromFavoritesList(id: Int) {
-        favoriteCinemaImp.deleteFavoriteCinemaFromFavoritesList(id)
+    override fun deleteFavoritesCinemaFromFavoritesList(id: Int) {
+        favoriteCinemaImp.deleteFavoritesCinemaFromFavoritesList(id)
     }
-    companion object{
+
+    companion object {
         @JvmStatic
-        var movie: Job? =null
+        var movie: Job? = null
     }
 }

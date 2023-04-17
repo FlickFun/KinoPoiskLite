@@ -15,7 +15,8 @@
  */
 package com.fsoftstudio.kinopoisklite.domain.usecase
 
-import com.fsoftstudio.kinopoisklite.domain.data.DataRepository
+import com.fsoftstudio.kinopoisklite.data.FavoritesDataRepository
+import com.fsoftstudio.kinopoisklite.domain.mappers.PosterMapper
 import com.fsoftstudio.kinopoisklite.domain.ui.UiListCinemaFavorite
 import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinema
 import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinemaImp
@@ -28,7 +29,8 @@ import javax.inject.Inject
 
 class ListCinemaFavoriteUseCase @Inject constructor(
     private val favoriteCinemaImp: FavoriteCinemaImp,
-    private val dataRepository: DataRepository,
+    private val favoritesDataRepository: FavoritesDataRepository,
+    private val posterMapper: PosterMapper,
     private val uiListCinemaFavorite: UiListCinemaFavorite,
     private val userProfileUseCase: UserProfileUseCase
 ) : FavoriteCinema {
@@ -47,11 +49,14 @@ class ListCinemaFavoriteUseCase @Inject constructor(
 
     private fun movie(compositeDisposable: CompositeDisposable) =
         compositeDisposable.add(
-            dataRepository.getFavoriteMoviePostersListByLogin(userProfileUseCase.getLogin())
+            favoritesDataRepository.getFavoritesMoviePostersListByLogin(userProfileUseCase.getLogin())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    uiListCinemaFavorite.showFavoriteMovie(it, favoriteViewModel!!)
+                    uiListCinemaFavorite.showFavoriteMovie(
+                        posterMapper.fromRoomCinemaInfoDataEntityListForFavorites(it),
+                        favoriteViewModel!!
+                    )
                 }, {
 
                 })
@@ -59,23 +64,27 @@ class ListCinemaFavoriteUseCase @Inject constructor(
 
     private fun tvSeries(compositeDisposable: CompositeDisposable) =
         compositeDisposable.add(
-            dataRepository.getFavoriteTvSeriesPostersListByLogin(userProfileUseCase.getLogin())
+            favoritesDataRepository.getFavoritesTvSeriesPostersListByLogin(userProfileUseCase.getLogin())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    uiListCinemaFavorite.showFavoriteTvSeries(it, favoriteViewModel!!)
+                    uiListCinemaFavorite.showFavoriteTvSeries(
+                        posterMapper.fromRoomCinemaInfoDataEntityListForFavorites(it),
+                        favoriteViewModel!!
+                    )
                 }, {
 
                 })
         )
 
-    override fun addFavoriteCinemaToFavoritesList(id: Int) {
-        favoriteCinemaImp.addFavoriteCinemaToFavoritesList(id)
+    override fun addFavoritesCinemaToFavoritesList(id: Int) {
+        favoriteCinemaImp.addFavoritesCinemaToFavoritesList(id)
     }
 
-    override fun deleteFavoriteCinemaFromFavoritesList(id: Int) {
-        favoriteCinemaImp.deleteFavoriteCinemaFromFavoritesList(id)
+    override fun deleteFavoritesCinemaFromFavoritesList(id: Int) {
+        favoriteCinemaImp.deleteFavoritesCinemaFromFavoritesList(id)
     }
+
     companion object {
 
         @JvmStatic

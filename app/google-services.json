@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "573907194071-5e7foob7l2u8712mqe0bjck3mheh44ae.apps.googleusercontent.com",
+          "client_id": "573907194071-10tjbgdflgkhl5sutc52qv2d8boqffmu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.fsoftstudio.kinopoisklite",
-            "certificate_hash": "6d68f762b183ddcf7c0572df19a77d780960d84e"
+            "certificate_hash": "0e718acfc63c9022207819098ece2dab8f63a80e"
           }
         },
         {

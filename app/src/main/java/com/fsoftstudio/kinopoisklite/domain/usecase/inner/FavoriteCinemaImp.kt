@@ -16,7 +16,7 @@
 package com.fsoftstudio.kinopoisklite.domain.usecase.inner
 
 import android.annotation.SuppressLint
-import com.fsoftstudio.kinopoisklite.domain.data.DataRepository
+import com.fsoftstudio.kinopoisklite.data.FavoritesDataRepository
 import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaFavoriteUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.UserProfileUseCase
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -24,14 +24,14 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class FavoriteCinemaImp @Inject constructor(
-    private val dataRepository: DataRepository,
+    private val favoritesDataRepository: FavoritesDataRepository,
     private val userProfileUseCase: UserProfileUseCase
-) {
+) : FavoriteCinema {
 
      @SuppressLint("CheckResult")
-     fun addFavoriteCinemaToFavoritesList(id: Int) {
+     override fun addFavoritesCinemaToFavoritesList(id: Int) {
          ListCinemaFavoriteUseCase.favorite?.add(id)
-         dataRepository.addEntityIdToFavoriteEntities(id, userProfileUseCase.getLogin())
+         favoritesDataRepository.addEntityIdToFavoritesEntities(id, userProfileUseCase.getLogin())
              .subscribeOn(Schedulers.io())
              .observeOn(AndroidSchedulers.mainThread())
              .subscribe({
@@ -40,13 +40,14 @@ class FavoriteCinemaImp @Inject constructor(
      }
 
      @SuppressLint("CheckResult")
-     fun deleteFavoriteCinemaFromFavoritesList(id: Int) {
+     override fun deleteFavoritesCinemaFromFavoritesList(id: Int) {
          ListCinemaFavoriteUseCase.favorite?.remove(id)
-         dataRepository.deleteEntityIdFromFavoriteEntities(id, userProfileUseCase.getLogin())
+         favoritesDataRepository.deleteEntityIdFromFavoritesEntities(id, userProfileUseCase.getLogin())
              .subscribeOn(Schedulers.io())
              .observeOn(AndroidSchedulers.mainThread())
              .subscribe({
              }, {
              })
      }
+
 }

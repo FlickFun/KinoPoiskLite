@@ -17,7 +17,6 @@ package com.fsoftstudio.kinopoisklite.ui.adapters
 
 import android.annotation.SuppressLint
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -31,9 +30,8 @@ import com.fsoftstudio.kinopoisklite.databinding.CardSearchBinding
 import com.fsoftstudio.kinopoisklite.domain.models.Poster
 import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaFavoriteUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaSearchUseCase
-import com.fsoftstudio.kinopoisklite.parameters.Sys
-import com.fsoftstudio.kinopoisklite.parameters.Sys.FRAGMENT_DEFAULT
-import com.fsoftstudio.kinopoisklite.parameters.Sys.FRAGMENT_FAVORITE
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.FRAGMENT_DEFAULT
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.FRAGMENT_FAVORITE
 import com.fsoftstudio.kinopoisklite.ui.screens.MainActivity
 import com.fsoftstudio.kinopoisklite.utils.ImagesDownloader
 import kotlinx.coroutines.*
@@ -86,10 +84,6 @@ class ListCinemaRcAdapter @Inject constructor(
                 favorite = ListCinemaFavoriteUseCase.favorite?.contains(id) == true
             }
             notifyItemChanged(position)
-            Log.i(
-                Sys.TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER,
-                "position -> $position -> poster -> ${posters[position]} ->"
-            )
         }
     }
 
@@ -164,12 +158,12 @@ class ListCinemaRcAdapter @Inject constructor(
             val icon = when (favoriteHashSet?.contains(poster.id) == true) {
                 true -> {
                     poster.favorite = false
-                    listCinemaSearchUseCase.deleteFavoriteCinemaFromFavoritesList(poster.id)
+                    listCinemaSearchUseCase.deleteFavoritesCinemaFromFavoritesList(poster.id)
                     R.drawable.round_star_border_24
                 }
                 false -> {
                     poster.favorite = true
-                    listCinemaSearchUseCase.addFavoriteCinemaToFavoritesList(poster.id)
+                    listCinemaSearchUseCase.addFavoritesCinemaToFavoritesList(poster.id)
                     listCinemaSearchUseCase.favoriteChecked(poster.id, poster.cinema)
                     R.drawable.round_star_24
                 }

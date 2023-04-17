@@ -35,10 +35,10 @@ import androidx.work.WorkerParameters
 import com.fsoftstudio.kinopoisklite.R
 import com.fsoftstudio.kinopoisklite.domain.usecase.AppUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.PostersUseCase
-import com.fsoftstudio.kinopoisklite.parameters.Sys.NOTIFICATION_CHANNEL
-import com.fsoftstudio.kinopoisklite.parameters.Sys.NOTIFICATION_ID
-import com.fsoftstudio.kinopoisklite.parameters.Sys.NOTIFICATION_NAME
-import com.fsoftstudio.kinopoisklite.parameters.Sys.TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTIFICATION_CHANNEL
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTIFICATION_ID
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTIFICATION_NAME
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER
 import com.fsoftstudio.kinopoisklite.ui.screens.MainActivity
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
