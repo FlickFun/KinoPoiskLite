@@ -42,9 +42,6 @@
 
 ## Packages structure
 
-<div align="left">
-  <img src="https://github.com/FlickFun/Files/blob/main/packages_structure.png" width="300" />
-</div>
 <br/>
 <div align="left">
   <img src="https://github.com/FlickFun/Files/blob/main/packages_structure_1.png" width="300" />
