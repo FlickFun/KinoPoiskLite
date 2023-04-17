@@ -27,7 +27,7 @@ class BootBroadcast : BroadcastReceiver() {
     @SuppressLint("UnsafeProtectedBroadcastReceiver")
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.i(
-            ConstApp.TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER,
+            ConstApp.TAG_MOVIE_BASE,
             "Enter BroadcastReceiver() -> "
         )
         InitNotifyCheckChangePostersWorker(context?.applicationContext!!).checkPosters()

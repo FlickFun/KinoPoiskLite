@@ -38,7 +38,7 @@ import com.fsoftstudio.kinopoisklite.domain.usecase.PostersUseCase
 import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTIFICATION_CHANNEL
 import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTIFICATION_ID
 import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTIFICATION_NAME
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TAG_MOVIE_BASE
 import com.fsoftstudio.kinopoisklite.ui.screens.MainActivity
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -55,8 +55,8 @@ class NotifyCheckChangePostersWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         Log.i(
-            TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER,
-            "Enter NotifyCheckChangePostersWorker -> "
+            TAG_MOVIE_BASE,
+            "Enter doWork() -> "
         )
         val id = inputData.getLong(NOTIFICATION_ID, 0).toInt()
         return try {
@@ -69,16 +69,16 @@ class NotifyCheckChangePostersWorker @AssistedInject constructor(
                         sendNotification(id)
                     }
                     Log.i(
-                        TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER,
+                        TAG_MOVIE_BASE,
                         "Take checkChangePoster callback = $isPostersChanged -> then maybe check and sendNotification($id) ->"
                     )
                 }
             }
-            Log.i(TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER, "Before Result.success() -> ")
+            Log.i(TAG_MOVIE_BASE, "Before Result.success() -> ")
             Result.success()
         } catch (e: Exception) {
             Log.i(
-                TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER,
+                TAG_MOVIE_BASE,
                 "Error NotifyCheckChangePostersWorker -> $e"
             )
             Result.failure()

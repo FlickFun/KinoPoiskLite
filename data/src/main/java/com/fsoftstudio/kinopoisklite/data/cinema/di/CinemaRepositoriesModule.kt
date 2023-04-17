@@ -1,7 +1,7 @@
 package com.fsoftstudio.kinopoisklite.data.cinema.di
 
 import com.fsoftstudio.kinopoisklite.data.CinemaDataRepository
-import com.fsoftstudio.kinopoisklite.data.cinema.CinemaDataRepositoryImp
+import com.fsoftstudio.kinopoisklite.data.cinema.CinemaDataRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,6 +15,6 @@ interface CinemaRepositoriesModule {
     @Singleton
     @Binds
     fun bindCinemaDataRepository(
-        cinemaDataRepositoryImp: CinemaDataRepositoryImp
+        cinemaDataRepositoryImpl: CinemaDataRepositoryImpl
     ): CinemaDataRepository
 }

@@ -1,7 +1,7 @@
 package com.fsoftstudio.kinopoisklite.data.favorites.di
 
 import com.fsoftstudio.kinopoisklite.data.FavoritesDataRepository
-import com.fsoftstudio.kinopoisklite.data.favorites.FavoritesDataRepositoryImp
+import com.fsoftstudio.kinopoisklite.data.favorites.FavoritesDataRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,6 +15,6 @@ interface FavoritesRepositoriesModule {
     @Singleton
     @Binds
     fun bindFavoritesDataRepository(
-        favoritesDataRepositoryImp: FavoritesDataRepositoryImp
+        favoritesDataRepositoryImpl: FavoritesDataRepositoryImpl
     ): FavoritesDataRepository
 }

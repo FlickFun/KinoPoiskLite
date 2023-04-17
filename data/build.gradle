@@ -64,14 +64,10 @@ android {
 dependencies {
 
     implementation Libs.Android.CoreKtx
-    implementation Libs.Android.ActivityKtx
-    implementation Libs.Android.AppCompat
-    implementation Libs.Google.Material
 
     // hilt
     implementation Libs.Google.Hilt
     kapt Libs.Google.HiltCompilerKapt
-    kapt Libs.Android.HiltWork
 
     // rxjava3
     implementation Libs.Reactivex.Rxjava3Rxjava
@@ -93,12 +89,6 @@ dependencies {
     implementation Libs.Squareup.okhttp3LoggingInterceptor
 
     // firebase
-    implementation platform(Libs.Google.firebaseBom)
+    implementation platform(Libs.Google.firebaseBomPlatform)
     implementation Libs.Google.firebasedatabaseKtx
-
-    // tests
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-
 }

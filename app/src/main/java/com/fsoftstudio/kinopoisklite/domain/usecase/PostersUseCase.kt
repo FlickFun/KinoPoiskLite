@@ -26,7 +26,7 @@ import com.fsoftstudio.kinopoisklite.domain.ui.UiPosters
 import com.fsoftstudio.kinopoisklite.domain.usecase.ExceptionsUseCase.Companion.EXCEPTION_POSTERS
 import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinema
 import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinemaImp
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER
+import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TAG_MOVIE_BASE
 import com.fsoftstudio.kinopoisklite.ui.screens.home.HomeFlowViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -34,6 +34,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import okhttp3.ResponseBody
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -91,7 +92,7 @@ class PostersUseCase @Inject constructor(
             delay(1_000L)
             if (count++ > 10) {
                 Log.i(
-                    TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER,
+                    TAG_MOVIE_BASE,
                     "Posters not checked -> isMovieNotUpdated = $isMovieNotUpdated, isTvSeriesNotUpdated = $isTvSeriesNotUpdated ->"
                 )
                 break
@@ -106,10 +107,10 @@ class PostersUseCase @Inject constructor(
 
     private fun getMoviePosters() {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, e ->
-            checkAndUpdate()
+            checkIsCanUpdateMovieAndUpdate()
             Log.i(
-                TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER,
-                "Error getMoviePosters -> $e ->"
+                TAG_MOVIE_BASE,
+                "Error getLocalMoviePosters -> $e ->"
             )
         }
         CoroutineScope(IO).launch(coroutineExceptionHandler) {
@@ -118,12 +119,12 @@ class PostersUseCase @Inject constructor(
             if (isCanUpdate) {
                 updateMoviePosters()
             } else {
-                checkAndUpdate()
+                checkIsCanUpdateMovieAndUpdate()
             }
         }
     }
 
-    private fun checkAndUpdate() {
+    private fun checkIsCanUpdateMovieAndUpdate() {
         CoroutineScope(IO).launch {
             var count = 0
             while (!AppUseCase.isCanUpdate) {
@@ -137,17 +138,21 @@ class PostersUseCase @Inject constructor(
         }
     }
 
-    private fun updateMoviePosters() {
+    private fun updateMoviePosters(isNeedDelay: Boolean = false) {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, e ->
             if (isNotNotifyCheckChangePostersWorker) {
                 exceptionsUseCase.showNoInternet(EXCEPTION_POSTERS)
             }
             Log.i(
-                TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER,
-                "Error updateMoviePosters -> $e ->"
+                TAG_MOVIE_BASE,
+                "Error getRemoteMoviePosters -> $e ->"
             )
+            updateMoviePosters(true)
         }
         updateMoviePostersJob = CoroutineScope(IO).launch(coroutineExceptionHandler) {
+            if (isNeedDelay) {
+                delay(3_000L)
+            }
             val response = moviesDataRepository.getRemoteMoviePosters()
 
             if (response.isSuccessful) {
@@ -198,13 +203,13 @@ class PostersUseCase @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     sendShowTvSeriesPosters(it)
-                    checkIsCanUpdateAndUpdate()
+                    checkIsCanUpdateTvSeriesAndUpdate()
                 }, {
-                    checkIsCanUpdateAndUpdate()
+                    checkIsCanUpdateTvSeriesAndUpdate()
                 })
         )
 
-    private fun checkIsCanUpdateAndUpdate() {
+    private fun checkIsCanUpdateTvSeriesAndUpdate() {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ ->
         }
         CoroutineScope(IO).launch(coroutineExceptionHandler) {
@@ -212,24 +217,34 @@ class PostersUseCase @Inject constructor(
                 updateTvSeriesPosters()
             } else {
                 while (!isCanUpdate) {
-                    delay(1_000L)
+                    delay(500L)
                 }
                 updateTvSeriesPosters()
             }
         }
     }
 
-    private fun updateTvSeriesPosters() =
+    private fun updateTvSeriesPosters(delaySeconds: Long = 0) =
         compositeDisposable!!.add(
             tvSeriesDataRepository.getRemoteTvSeriesPosters()
+                .delaySubscription(delaySeconds, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     sendShowTvSeriesPosters(it)
                     isTvSeriesNotUpdated = false
                 }, {
+                    Log.i(
+                        TAG_MOVIE_BASE,
+                        "Error getRemoteTvSeriesPosters -> $it ->"
+                    )
+                    tryUpdateTvSeriesPostersAgain()
                 })
         )
+
+    private fun tryUpdateTvSeriesPostersAgain() {
+        updateTvSeriesPosters(3)
+    }
 
     private fun sendShowTvSeriesPosters(
         retrofitTvSeriesDataEntitiesList: RetrofitTvSeriesDataEntitiesList

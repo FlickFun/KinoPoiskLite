@@ -41,13 +41,13 @@ internal object ConstData {
     const val TV_SERIES = "tvSeries"
 
     const val NO_DATA = "Нет данных"
-    const val NO_TITLE = "Без названия"
+//    const val NO_TITLE = "Без названия"
 
     const val ERROR_WRONG_CATEGORY = "{\"status_code\":\"100\",\"status_message\":\"Неверно указана категория для поиска.\"}"
 
     const val MAIN_NODE = "main"
     const val APP_DATA_NODE = "app_data"
-    const val TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER = "NOTIFY_POSTERS_WORKER"
+//    const val TAG_MOVIE_BASE = "MOVIE_BASE"
 
 
 // -----  SharedPrefs -------

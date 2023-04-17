@@ -15,16 +15,10 @@
  */
 package com.fsoftstudio.kinopoisklite.ui.screens
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import com.fsoftstudio.kinopoisklite.workers.InitNotifyCheckChangePostersWorker
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import javax.inject.Inject
 
-@HiltViewModel
-class MainActivityViewModel @Inject constructor(application: Application) :
-    AndroidViewModel(application) {
+class MainActivityViewModel : ViewModel() {
 
     private var _exception: MutableStateFlow<String?> = MutableStateFlow(null)
     var exception: MutableStateFlow<String?>
@@ -38,10 +32,6 @@ class MainActivityViewModel @Inject constructor(application: Application) :
         set(ad) {
             _bootAutoStartAlertDialog = ad
         }
-
-    init {
-        InitNotifyCheckChangePostersWorker(application.applicationContext).checkPosters()
-    }
 
     fun setExceptionToStateFlow(exception: String) {
         _exception.value = exception

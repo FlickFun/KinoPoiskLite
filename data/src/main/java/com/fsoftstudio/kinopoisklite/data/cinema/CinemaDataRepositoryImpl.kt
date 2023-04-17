@@ -26,7 +26,7 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 import javax.inject.Inject
 
-class CinemaDataRepositoryImp @Inject constructor(
+class CinemaDataRepositoryImpl @Inject constructor(
     private val cinemaTMDbLocalDataSource: CinemaTMDbLocalDataSource,
     private val cinemaTMDbRemoteDataSource: CinemaTMDbRemoteDataSource
 ) : CinemaDataRepository {

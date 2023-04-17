@@ -1,7 +1,7 @@
 package com.fsoftstudio.kinopoisklite.data.tvseries.di
 
 import com.fsoftstudio.kinopoisklite.data.TvSeriesDataRepository
-import com.fsoftstudio.kinopoisklite.data.tvseries.TvSeriesDataRepositoryImp
+import com.fsoftstudio.kinopoisklite.data.tvseries.TvSeriesDataRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,6 +15,6 @@ interface TvSeriesRepositoriesModule {
     @Singleton
     @Binds
     fun bindTvSeriesRepository(
-        tvSeriesDataRepository: TvSeriesDataRepositoryImp
+        tvSeriesDataRepositoryImpl: TvSeriesDataRepositoryImpl
     ): TvSeriesDataRepository
 }

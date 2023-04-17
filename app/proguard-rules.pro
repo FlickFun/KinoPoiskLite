@@ -13,7 +13,7 @@
 #}
 
 -flattenpackagehierarchy 'MainActivity'
--keepclassmembers class * implements com.fsoftstudio.kinopoisklite.KeepFieldNames {
+-keepclassmembers class * implements com.fsoftstudio.kinopoisklite.parameters.KeepFieldNames {
     !static <fields>;
     !private <methods>;
 }

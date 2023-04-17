@@ -22,7 +22,7 @@ import com.fsoftstudio.kinopoisklite.data.settings.sources.SettingsLocalDataSour
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
-class SettingsDataRepositoryImp @Inject constructor(
+class SettingsDataRepositoryImpl @Inject constructor(
     private val settingsRemoteDataSource: SettingsRemoteDataSource,
     private val settingsLocalDataSource: SettingsLocalDataSource
 ) : SettingsDataRepository {

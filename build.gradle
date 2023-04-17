@@ -31,7 +31,9 @@ buildscript {
                         WorkRrxjava3: "androidx.work:work-rxjava3:$work_version",
                         WorkGcm: "androidx.work:work-gcm:$work_version",
                         WorkMultiprocess: "androidx.work:work-multiprocess:$work_version",
+
                         HiltWork: "androidx.hilt:hilt-work:1.0.0",
+                        HiltCompilerKapt: "androidx.hilt:hilt-compiler:1.0.0",
 
                         RoomRuntime: "androidx.room:room-runtime:$room_version",
                         RoomCompilerAnnotationProcessor: "androidx.room:room-compiler:$room_version",
@@ -41,15 +43,18 @@ buildscript {
                 ],
                 Google: [
                         Material: "com.google.android.material:material:1.8.0",
+
                         Hilt: "com.google.dagger:hilt-android:$hilt_version",
                         HiltCompilerKapt: "com.google.dagger:hilt-compiler:$hilt_version",
-                        firebaseBom: "com.google.firebase:firebase-bom:31.2.3",
+
+                        firebaseBomPlatform: "com.google.firebase:firebase-bom:31.2.3",
                         firebasedatabaseKtx: "com.google.firebase:firebase-database-ktx",
                 ],
                 Squareup: [
                         Retrofit2: "com.squareup.retrofit2:retrofit:$retrofit2_version",
                         retrofit2ConverterGson: "com.squareup.retrofit2:converter-gson:$retrofit2_version",
                         retrofit2AdapterRxjava3: "com.squareup.retrofit2:adapter-rxjava3:$retrofit2_version",
+
                         okhttp3: "com.squareup.okhttp3:okhttp:$okhttp3_version",
                         okhttp3LoggingInterceptor: "com.squareup.okhttp3:logging-interceptor:$okhttp3_version",
                 ],

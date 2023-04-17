@@ -1,7 +1,7 @@
 package com.fsoftstudio.kinopoisklite.data.accounts.di
 
 import com.fsoftstudio.kinopoisklite.data.AccountsDataRepository
-import com.fsoftstudio.kinopoisklite.data.accounts.AccountsDataRepositoryImp
+import com.fsoftstudio.kinopoisklite.data.accounts.AccountsDataRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,6 +15,6 @@ interface AccountsRepositoriesModule {
     @Singleton
     @Binds
     fun bindAccountsDataRepository(
-        accountsDataRepositoryImp: AccountsDataRepositoryImp
+        accountsDataRepositoryImpl: AccountsDataRepositoryImpl
     ): AccountsDataRepository
 }

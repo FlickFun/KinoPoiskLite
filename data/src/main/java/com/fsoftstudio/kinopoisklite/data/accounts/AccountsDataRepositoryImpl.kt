@@ -21,7 +21,7 @@ import com.fsoftstudio.kinopoisklite.data.accounts.sources.AccountsLocalDataSour
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
-class AccountsDataRepositoryImp @Inject constructor(
+class AccountsDataRepositoryImpl @Inject constructor(
     private val accountsLocalDataSource: AccountsLocalDataSource
 ) : AccountsDataRepository {
 

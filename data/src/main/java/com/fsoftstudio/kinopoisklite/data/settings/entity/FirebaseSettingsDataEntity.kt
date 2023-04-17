@@ -15,7 +15,7 @@
  */
 package com.fsoftstudio.kinopoisklite.data.settings.entity
 
-import com.fsoftstudio.kinopoisklite.data.KeepFieldNames
+import com.fsoftstudio.kinopoisklite.data.parameters.KeepFieldNames
 import java.io.Serializable
 data class FirebaseSettingsDataEntity(
     var api_key: String? = null,

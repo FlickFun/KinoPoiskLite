@@ -14,8 +14,8 @@ android {
         applicationId "com.fsoftstudio.kinopoisklite"
         minSdk minAndroidSdk
         targetSdk targetAndroidSdk
-        versionCode 7
-        versionName "1.0.3"
+        versionCode 8
+        versionName "1.0.4"
 
         testInstrumentationRunner "com/fsoftstudio/kinopoisklite/HiltAndroidTestRunner"
     }
@@ -103,19 +103,16 @@ dependencies {
 
     // okhttp3
     implementation Libs.Squareup.okhttp3
-    implementation Libs.Squareup.okhttp3LoggingInterceptor
 
     // hilt
     implementation Libs.Google.Hilt
     kapt Libs.Google.HiltCompilerKapt
+    kapt Libs.Android.HiltCompilerKapt
     implementation Libs.Android.HiltWork
-    kapt Libs.Android.HiltWork
 
     // Work
     implementation Libs.Android.WorkRuntimeKtx
-    implementation Libs.Android.WorkRrxjava3
     implementation Libs.Android.WorkGcm
-    implementation Libs.Android.WorkMultiprocess
 
     implementation project(Modules.Data)
 }

@@ -25,7 +25,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
-class FavoritesDataRepositoryImp @Inject constructor(
+class FavoritesDataRepositoryImpl @Inject constructor(
     private val favoritesTMDbLocalDataSource: FavoritesTMDbLocalDataSource,
 ) : FavoritesDataRepository {
 

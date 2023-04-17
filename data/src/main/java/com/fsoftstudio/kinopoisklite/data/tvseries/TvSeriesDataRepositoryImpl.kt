@@ -25,7 +25,7 @@ import com.fsoftstudio.kinopoisklite.data.tvseries.sources.TvSeriesTMDbLocalData
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
-class TvSeriesDataRepositoryImp @Inject constructor(
+class TvSeriesDataRepositoryImpl @Inject constructor(
     private val tvSeriesTMDbLocalDataSource: TvSeriesTMDbLocalDataSource,
     private val tvSeriesTMDbRemoteDataSource: TvSeriesTMDbRemoteDataSource
 ) : TvSeriesDataRepository {

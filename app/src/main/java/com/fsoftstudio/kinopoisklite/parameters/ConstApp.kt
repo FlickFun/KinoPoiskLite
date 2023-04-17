@@ -51,7 +51,7 @@ internal object ConstApp {
     const val NOTIFICATION_CHANNEL = "kino_poisk_lite_channel_01"
     const val NOTIFICATION_WORK = "kino_poisk_lite_notification_work"
     const val TAG_OUTPUT = "NotifyCheckChangePostersWorker"
-    const val TAG_NOTIFY_CHECK_CHANGE_POSTERS_WORKER = "NOTIFY_POSTERS_WORKER"
+    const val TAG_MOVIE_BASE = "MOVIE_BASE"
 
 // -----  SharedPrefs -------
 
