@@ -180,14 +180,14 @@ class PostersUseCase @Inject constructor(
     ) {
         responseMoviesList?.let {
             val postersList = posterMapper.fromRetrofitMoviePosterDataEntityList(it.results)
-            if (isNotSameList(postersList, moviePosters)) {
+            if (postersList.isNotEmpty() && isNotSameList(postersList, moviePosters)) {
                 if (isNotNotifyCheckChangePostersWorker) {
                     uiPoster.showPostersMovie(
                         postersList,
                         homeFlowViewModel!!
                     )
                 } else {
-                    moviePosters?.let { setIsNeedShowNotification() }
+                    setIsNeedShowNotification()
                 }
                 moviePosters = postersList
             }
@@ -252,14 +252,14 @@ class PostersUseCase @Inject constructor(
         val postersList = posterMapper.fromRetrofitTvSeriesPosterDataEntityList(
             retrofitTvSeriesDataEntitiesList.results
         )
-        if (isNotSameList(postersList, tvSeriesPosters)) {
+        if (postersList.isNotEmpty() && isNotSameList(postersList, tvSeriesPosters)) {
             if (isNotNotifyCheckChangePostersWorker) {
                 uiPoster.showPostersTvSeries(
                     postersList,
                     homeFlowViewModel!!
                 )
             } else {
-                tvSeriesPosters?.let { setIsNeedShowNotification() }
+                setIsNeedShowNotification()
             }
             tvSeriesPosters = postersList
         }
