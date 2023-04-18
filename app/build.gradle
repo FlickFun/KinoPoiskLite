@@ -14,8 +14,8 @@ android {
         applicationId "com.fsoftstudio.kinopoisklite"
         minSdk minAndroidSdk
         targetSdk targetAndroidSdk
-        versionCode 8
-        versionName "1.0.4"
+        versionCode 9
+        versionName "1.0.5"
 
         testInstrumentationRunner "com/fsoftstudio/kinopoisklite/HiltAndroidTestRunner"
     }

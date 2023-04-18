@@ -187,10 +187,10 @@ class PostersUseCase @Inject constructor(
                         homeFlowViewModel!!
                     )
                 } else {
-                    setIsNeedShowNotification()
+                    moviePosters?.let { setIsNeedShowNotification() }
                 }
-                moviePosters = postersList
             }
+            moviePosters = postersList
             getCinemaInfoForAllPosters(postersList)
         }
     }
@@ -259,16 +259,16 @@ class PostersUseCase @Inject constructor(
                     homeFlowViewModel!!
                 )
             } else {
-                setIsNeedShowNotification()
+                tvSeriesPosters?.let { setIsNeedShowNotification() }
             }
-            tvSeriesPosters = postersList
         }
+        tvSeriesPosters = postersList
         getCinemaInfoForAllPosters(postersList)
     }
 
-    private fun isNotSameList(postersListMew: List<Poster>, postersList: List<Poster>?): Boolean {
+    private fun isNotSameList(postersListNew: List<Poster>, postersList: List<Poster>?): Boolean {
         return if (postersList?.isNotEmpty() == true) {
-            !postersList.all { e -> postersListMew.any { p -> e == p } }
+            !postersList.all { e -> postersListNew.any { p -> e == p } }
         } else true
     }
 
