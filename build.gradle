@@ -3,6 +3,20 @@ buildscript {
         minAndroidSdk = 23
         targetAndroidSdk = 33
         compileAndroidSdk = 33
+        minifyEnabledRelease = true
+        minifyEnabledDebug = false
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+        storeFilePr = file(properties.getProperty('appPrivateKey'))
+        keyAliasPr = properties.getProperty('keyAlias')
+        storePasswordPr = properties.getProperty('storePassword')
+        keyPasswordPr = properties.getProperty('keyPassword')
+
+        testInstrumentationRunnerHilt = "com/fsoftstudio/kinopoisklite/HiltAndroidTestRunner"
+        testInstrumentationRunnerJunit =  "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerNow = testInstrumentationRunnerHilt
 
         hilt_version = "2.45"
         nav_version = "2.5.3"
@@ -117,7 +131,7 @@ buildscript {
                 Navigation: ":navigation",
                 Core: [
                         Common: ":core:common",
-                        CommonImpl: ":core:common-impl",
+                        CommonImpl: ":core:common_impl",
                         Presentation: ":core:presentation",
                         Theme: ":core:theme",
                 ],

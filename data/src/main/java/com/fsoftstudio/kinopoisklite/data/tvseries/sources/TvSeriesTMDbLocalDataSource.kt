@@ -28,4 +28,5 @@ interface TvSeriesTMDbLocalDataSource {
     fun saveListTvSeriesPosters(listRetrofitTvSeriesPosterDataEntity: List<RetrofitTvSeriesPosterDataEntity>): Completable
 
     fun searchTvSeriesEntitiesByText(cinema: String, searchText: String): Single<List<RoomCinemaInfoDataEntity>>
+    fun deleteTvSeriesPopularEntities()
 }

@@ -15,7 +15,7 @@
  */
 package com.fsoftstudio.kinopoisklite.domain.usecase
 
-import android.util.Log
+import com.fsoftstudio.kinopoisklite.common.Logger
 import com.fsoftstudio.kinopoisklite.data.MoviesDataRepository
 import com.fsoftstudio.kinopoisklite.data.TvSeriesDataRepository
 import com.fsoftstudio.kinopoisklite.data.movies.entities.RetrofitMovieDataEntitiesList
@@ -24,9 +24,6 @@ import com.fsoftstudio.kinopoisklite.domain.mappers.PosterMapper
 import com.fsoftstudio.kinopoisklite.domain.models.Poster
 import com.fsoftstudio.kinopoisklite.domain.ui.UiPosters
 import com.fsoftstudio.kinopoisklite.domain.usecase.ExceptionsUseCase.Companion.EXCEPTION_POSTERS
-import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinema
-import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinemaImp
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TAG_MOVIE_BASE
 import com.fsoftstudio.kinopoisklite.ui.screens.home.HomeFlowViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -39,14 +36,14 @@ import javax.inject.Inject
 
 
 class PostersUseCase @Inject constructor(
-    private val favoriteCinemaImp: FavoriteCinemaImp,
     private val moviesDataRepository: MoviesDataRepository,
     private val tvSeriesDataRepository: TvSeriesDataRepository,
     private val posterMapper: PosterMapper,
     private val uiPoster: UiPosters,
     private val cinemaInfoUseCase: CinemaInfoUseCase,
-    private val exceptionsUseCase: ExceptionsUseCase
-) : FavoriteCinema {
+    private val exceptionsUseCase: ExceptionsUseCase,
+    private val logger: Logger
+) {
 
     private var updateMoviePostersJob: Job? = null
     private var homeFlowViewModel: HomeFlowViewModel? = null
@@ -91,10 +88,7 @@ class PostersUseCase @Inject constructor(
         while (isTvSeriesNotUpdated || isMovieNotUpdated) {
             delay(1_000L)
             if (count++ > 10) {
-                Log.i(
-                    TAG_MOVIE_BASE,
-                    "Posters not checked -> isMovieNotUpdated = $isMovieNotUpdated, isTvSeriesNotUpdated = $isTvSeriesNotUpdated ->"
-                )
+                logger.log("Posters not checked -> isMovieNotUpdated = $isMovieNotUpdated, isTvSeriesNotUpdated = $isTvSeriesNotUpdated ->")
                 break
             }
         }
@@ -108,10 +102,7 @@ class PostersUseCase @Inject constructor(
     private fun getMoviePosters() {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, e ->
             checkIsCanUpdateMovieAndUpdate()
-            Log.i(
-                TAG_MOVIE_BASE,
-                "Error getLocalMoviePosters -> $e ->"
-            )
+            logger.err(e, "getLocalMoviePosters ->")
         }
         CoroutineScope(IO).launch(coroutineExceptionHandler) {
             val result = moviesDataRepository.getLocalMoviePosters()
@@ -143,10 +134,7 @@ class PostersUseCase @Inject constructor(
             if (isNotNotifyCheckChangePostersWorker) {
                 exceptionsUseCase.showNoInternet(EXCEPTION_POSTERS)
             }
-            Log.i(
-                TAG_MOVIE_BASE,
-                "Error getRemoteMoviePosters -> $e ->"
-            )
+            logger.err(e, "getRemoteMoviePosters ->")
             updateMoviePosters(true)
         }
         updateMoviePostersJob = CoroutineScope(IO).launch(coroutineExceptionHandler) {
@@ -162,7 +150,6 @@ class PostersUseCase @Inject constructor(
                     )
                 }
                 isMovieNotUpdated = false
-
             } else {
                 if (isNotNotifyCheckChangePostersWorker) {
                     exceptionsUseCase.showHttpExceptionInfo(
@@ -205,6 +192,7 @@ class PostersUseCase @Inject constructor(
                     sendShowTvSeriesPosters(it)
                     checkIsCanUpdateTvSeriesAndUpdate()
                 }, {
+                    logger.err(it,"getLocalTvSeriesPosters ->")
                     checkIsCanUpdateTvSeriesAndUpdate()
                 })
         )
@@ -234,10 +222,7 @@ class PostersUseCase @Inject constructor(
                     sendShowTvSeriesPosters(it)
                     isTvSeriesNotUpdated = false
                 }, {
-                    Log.i(
-                        TAG_MOVIE_BASE,
-                        "Error getRemoteTvSeriesPosters -> $it ->"
-                    )
+                    logger.err(it,"getRemoteTvSeriesPosters ->")
                     tryUpdateTvSeriesPostersAgain()
                 })
         )
@@ -300,13 +285,5 @@ class PostersUseCase @Inject constructor(
 
     private fun setIsNeedShowNotification() {
         isNeedNotificationThatDataChanged = true
-    }
-
-    override fun addFavoritesCinemaToFavoritesList(id: Int) {
-        favoriteCinemaImp.addFavoritesCinemaToFavoritesList(id)
-    }
-
-    override fun deleteFavoritesCinemaFromFavoritesList(id: Int) {
-        favoriteCinemaImp.deleteFavoritesCinemaFromFavoritesList(id)
     }
 }

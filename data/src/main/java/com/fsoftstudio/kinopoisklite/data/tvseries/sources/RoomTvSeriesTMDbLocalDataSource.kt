@@ -22,7 +22,7 @@ import com.fsoftstudio.kinopoisklite.data.tvseries.entities.RoomTvSeriesPosterEn
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 
-class RoomTvSeriesTMDbLocalDataSource(
+class RoomTvSeriesTMDbLocalDataSource (
     private val tvSeriesTMDbDao: TvSeriesTMDbDao
 ) : TvSeriesTMDbLocalDataSource {
 
@@ -38,5 +38,10 @@ class RoomTvSeriesTMDbLocalDataSource(
         cinema: String,
         searchText: String
     ): Single<List<RoomCinemaInfoDataEntity>> = tvSeriesTMDbDao.loadTvSeriesEntityByText(cinema, searchText)
+
+    override fun deleteTvSeriesPopularEntities() {
+        tvSeriesTMDbDao.delete(tvSeriesTMDbDao.loadTvSeriesPosterEntities().blockingGet())
+
+    }
 
 }

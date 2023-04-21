@@ -18,8 +18,8 @@ package com.fsoftstudio.kinopoisklite.data.favorites
 import com.fsoftstudio.kinopoisklite.data.FavoritesDataRepository
 import com.fsoftstudio.kinopoisklite.data.cinema.entities.RoomCinemaInfoDataEntity
 import com.fsoftstudio.kinopoisklite.data.favorites.sources.FavoritesTMDbLocalDataSource
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.MOVIE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.TV_SERIES
+import com.fsoftstudio.kinopoisklite.common.entity.Const.MOVIE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.TV_SERIES
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single

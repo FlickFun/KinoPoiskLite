@@ -17,7 +17,7 @@ package com.fsoftstudio.kinopoisklite.data.tvseries
 
 import com.fsoftstudio.kinopoisklite.data.TvSeriesDataRepository
 import com.fsoftstudio.kinopoisklite.data.cinema.entities.mapToRetrofitTvSeriesPosterDataEntity
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.TV_SERIES
+import com.fsoftstudio.kinopoisklite.common.entity.Const.TV_SERIES
 import com.fsoftstudio.kinopoisklite.data.tvseries.entities.RetrofitTvSeriesDataEntitiesList
 import com.fsoftstudio.kinopoisklite.data.tvseries.entities.mapToRemote
 import com.fsoftstudio.kinopoisklite.data.tvseries.sources.TvSeriesTMDbRemoteDataSource

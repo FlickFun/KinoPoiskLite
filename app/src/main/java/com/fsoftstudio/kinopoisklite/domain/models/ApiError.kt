@@ -15,7 +15,7 @@
  */
 package com.fsoftstudio.kinopoisklite.domain.models
 
-import com.fsoftstudio.kinopoisklite.parameters.KeepFieldNames
+import com.fsoftstudio.kinopoisklite.common.KeepFieldNames
 import java.io.Serializable
 
 data class ApiError(

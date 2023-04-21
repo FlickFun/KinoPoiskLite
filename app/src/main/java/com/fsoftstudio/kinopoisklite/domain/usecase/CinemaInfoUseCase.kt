@@ -17,6 +17,7 @@ package com.fsoftstudio.kinopoisklite.domain.usecase
 
 import android.content.Intent
 import androidx.core.content.ContextCompat.startActivity
+import com.fsoftstudio.kinopoisklite.R
 import com.fsoftstudio.kinopoisklite.data.CinemaDataRepository
 import com.fsoftstudio.kinopoisklite.domain.mappers.CinemaInfoMapper
 import com.fsoftstudio.kinopoisklite.domain.models.CinemaInfo
@@ -25,7 +26,10 @@ import com.fsoftstudio.kinopoisklite.domain.ui.UiCinemaInfo
 import com.fsoftstudio.kinopoisklite.domain.usecase.ExceptionsUseCase.Companion.EXCEPTION_CINEMA_INFO
 import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinema
 import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinemaImp
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp
+import com.fsoftstudio.kinopoisklite.common.entity.Const.CINEMA
+import com.fsoftstudio.kinopoisklite.common.entity.Const.ID_INT
+import com.fsoftstudio.kinopoisklite.common.entity.Const.STAR_BOOLEAN
+import com.fsoftstudio.kinopoisklite.common.entity.Const.TITLE
 import com.fsoftstudio.kinopoisklite.ui.screens.MainActivity
 import com.fsoftstudio.kinopoisklite.ui.screens.cinema.CinemaInfoActivity
 import com.fsoftstudio.kinopoisklite.ui.screens.cinema.CinemaViewModel
@@ -58,10 +62,11 @@ class CinemaInfoUseCase @Inject constructor(
         cinema: String,
         isNeedUpdateIfCalledFromCinemaInfoActivityAndShow: Boolean = true
     ) {
-        val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ ->
+        val coroutineExceptionHandler = CoroutineExceptionHandler { e, _ ->
             updateCinemaInfo(id, cinema, isNeedUpdateIfCalledFromCinemaInfoActivityAndShow)
         }
         CoroutineScope(Dispatchers.IO).launch(coroutineExceptionHandler) {
+
             val cinemaInfo = cinemaInfoMapper.fromRoomCinemaInfoDataEntity(
                 cinemaDataRepository.getLocalCinemaInfo(id, cinema)
             )
@@ -77,7 +82,6 @@ class CinemaInfoUseCase @Inject constructor(
             exceptionsUseCase.showNoInternet(EXCEPTION_CINEMA_INFO, cinemaViewModel)
         }
         CoroutineScope(Dispatchers.IO).launch(coroutineExceptionHandler) {
-
             val remoteCinemaInfo = async { cinemaDataRepository.getRemoteCinemaInfo(id, cinema) }
             if (remoteCinemaInfo.await().isSuccessful) {
                 remoteCinemaInfo.await().body()?.let {
@@ -122,11 +126,13 @@ class CinemaInfoUseCase @Inject constructor(
 
     fun openCinemaInfo(poster: Poster, ma: MainActivity) {
         val intent = Intent(ma, CinemaInfoActivity::class.java)
-        intent.putExtra(ConstApp.ID_INT, poster.id)
-        intent.putExtra(ConstApp.TITLE, poster.title)
-        intent.putExtra(ConstApp.STAR_BOOLEAN, poster.favorite)
-        intent.putExtra(ConstApp.CINEMA, poster.cinema)
+        intent.putExtra(ID_INT, poster.id)
+        intent.putExtra(TITLE, poster.title)
+        intent.putExtra(STAR_BOOLEAN, poster.favorite)
+        intent.putExtra(CINEMA, poster.cinema)
         startActivity(ma, intent, null)
+        ma.overridePendingTransition(R.anim.alpha_show_extension_anim_300, R.anim.alpha_hide_anim_300)
+
     }
 
     private fun sendShowCinemaInfo(cinemaInfo: CinemaInfo?) =

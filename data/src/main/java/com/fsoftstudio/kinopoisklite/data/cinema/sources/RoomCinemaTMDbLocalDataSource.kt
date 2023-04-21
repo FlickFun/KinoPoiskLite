@@ -15,6 +15,7 @@
  */
 package com.fsoftstudio.kinopoisklite.data.cinema.sources
 
+import com.fsoftstudio.kinopoisklite.common.FavoriteIdsStorage
 import com.fsoftstudio.kinopoisklite.data.cinema.entities.RoomCinemaInfoDataEntity
 
 class RoomCinemaTMDbLocalDataSource(
@@ -26,5 +27,11 @@ class RoomCinemaTMDbLocalDataSource(
 
     override suspend fun saveCinemaInfoEntity(cinemaInfoEntity: RoomCinemaInfoDataEntity) {
         cinemaTMDbDao.saveCinemaInfoEntity(cinemaInfoEntity)
+    }
+
+    override suspend fun deleteNotFavoriteCinemaInfoDataEntitiesByIds() {
+        cinemaTMDbDao.deleteListRoomCinemaInfoDataEntities(
+            cinemaTMDbDao.loadAllRoomCinemaInfoEntities()
+                .filter { e -> !FavoriteIdsStorage.get().contains(e.id) })
     }
 }

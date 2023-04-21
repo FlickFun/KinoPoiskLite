@@ -36,9 +36,9 @@ import com.fsoftstudio.kinopoisklite.databinding.ActivityMainBinding
 import com.fsoftstudio.kinopoisklite.domain.models.Poster
 import com.fsoftstudio.kinopoisklite.domain.usecase.AppUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.CinemaInfoUseCase
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.BOOT_AUTO_START_ASC_LATE
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.BOOT_AUTO_START_DO_NOT_ASC
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.BOOT_AUTO_START_OPEN_SETTINGS
+import com.fsoftstudio.kinopoisklite.common.entity.Const.BOOT_AUTO_START_ASC_LATE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.BOOT_AUTO_START_DO_NOT_ASC
+import com.fsoftstudio.kinopoisklite.common.entity.Const.BOOT_AUTO_START_OPEN_SETTINGS
 import com.fsoftstudio.kinopoisklite.utils.BootAutostartPermissionHelper
 import com.fsoftstudio.kinopoisklite.utils.ShowAlertDialog
 import com.fsoftstudio.kinopoisklite.utils.ShowInfo

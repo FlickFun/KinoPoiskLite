@@ -14,4 +14,5 @@ interface CinemaDataRepository {
     suspend fun getRemoteCinemaInfo(id: Int, cinema: String) : Response<RetrofitCinemaInfoDataEntity>
 
     suspend fun getRemoteCinemaActorsList(id: Int, cinema: String) : Response<RetrofitCinemaActorDataEntitiesList>
+
 }

@@ -44,6 +44,7 @@
     <string name="login">Войти</string>
     <string name="signup">Зарегистрироваться</string>
     <string name="logout">Выйти</string>
+    <string name="clean_cache">Очистить кэш</string>
 
     <string name="write_name">Введите имя (необязательно)</string>
     <string name="write_second_name">Введите email (необязательно)</string>

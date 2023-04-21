@@ -15,17 +15,17 @@
  */
 package com.fsoftstudio.kinopoisklite.data.tvseries.sources
 
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.API_KEY
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.APPEND_TO_RESPONSE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.APPEND_TO_RESPONSE_VALUE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.APPLICATION_JSON
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.INCLUDE_IMAGE_LANGUAGE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.INCLUDE_IMAGE_LANGUAGE_VALUE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.LANGUAGE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.LANGUAGE_VALUE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.QUERY
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.SEARCH_TV_SERIES
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.TV_SERIES_POPULAR
+import com.fsoftstudio.kinopoisklite.common.entity.Const.API_KEY
+import com.fsoftstudio.kinopoisklite.common.entity.Const.APPEND_TO_RESPONSE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.APPEND_TO_RESPONSE_VALUE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.APPLICATION_JSON
+import com.fsoftstudio.kinopoisklite.common.entity.Const.INCLUDE_IMAGE_LANGUAGE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.INCLUDE_IMAGE_LANGUAGE_VALUE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.LANGUAGE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.LANGUAGE_VALUE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.QUERY
+import com.fsoftstudio.kinopoisklite.common.entity.Const.SEARCH_TV_SERIES
+import com.fsoftstudio.kinopoisklite.common.entity.Const.TV_SERIES_POPULAR
 import com.fsoftstudio.kinopoisklite.data.tvseries.entities.RetrofitTvSeriesDataEntitiesList
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET

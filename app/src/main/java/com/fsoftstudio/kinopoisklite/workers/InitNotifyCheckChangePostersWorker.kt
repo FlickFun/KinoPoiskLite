@@ -16,19 +16,18 @@
 package com.fsoftstudio.kinopoisklite.workers
 
 import android.content.Context
-import android.util.Log
 import androidx.work.*
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTIFICATION_WORK
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TAG_MOVIE_BASE
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TAG_OUTPUT
+import com.fsoftstudio.kinopoisklite.common.Logger
+import com.fsoftstudio.kinopoisklite.common.entity.Const.NOTIFICATION_WORK
+import com.fsoftstudio.kinopoisklite.common.entity.Const.TAG_OUTPUT
 import java.util.concurrent.TimeUnit
 
-class InitNotifyCheckChangePostersWorker(private val context: Context) {
+class InitNotifyCheckChangePostersWorker(
+    private val context: Context,
+    private val logger: Logger
+) {
     fun checkPosters() {
-        Log.i(
-            TAG_MOVIE_BASE,
-            "Enter InitNotifyCheckChangePostersWorker.checkPosters() ->"
-        )
+        logger.log("Enter InitNotifyCheckChangePostersWorker.checkPosters() ->")
         val workConstraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()

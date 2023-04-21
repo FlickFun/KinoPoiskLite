@@ -20,10 +20,10 @@ import com.fsoftstudio.kinopoisklite.domain.models.ApiError
 import com.fsoftstudio.kinopoisklite.domain.ui.UiCinemaInfo
 import com.fsoftstudio.kinopoisklite.domain.ui.UiListCinemaSearch
 import com.fsoftstudio.kinopoisklite.domain.ui.UiPosters
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ERROR_INVALID_API_KEY_PLEASE_INFORM_DEV
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ERROR_NO_INTERNET
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ERROR_RESOURCE_NOT_FOUND_PLEASE_INFORM_DEV
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ERROR_UNKNOWN_PLEASE_INFORM_DEV
+import com.fsoftstudio.kinopoisklite.common.entity.Const.ERROR_INVALID_API_KEY_PLEASE_INFORM_DEV
+import com.fsoftstudio.kinopoisklite.common.entity.Const.ERROR_NO_INTERNET
+import com.fsoftstudio.kinopoisklite.common.entity.Const.ERROR_RESOURCE_NOT_FOUND_PLEASE_INFORM_DEV
+import com.fsoftstudio.kinopoisklite.common.entity.Const.ERROR_UNKNOWN_PLEASE_INFORM_DEV
 import com.fsoftstudio.kinopoisklite.ui.screens.MainActivity
 import com.fsoftstudio.kinopoisklite.ui.screens.cinema.CinemaViewModel
 import com.google.gson.Gson
@@ -37,7 +37,7 @@ class ExceptionsUseCase @Inject constructor(
     private val uiCinemaInfo: UiCinemaInfo
 ) {
 
-    fun showFireBaseExceptionInfo(
+    fun showExceptionMessage(
         errorMessage: String,
     ) {
         showMessage(EXCEPTION_POSTERS, errorMessage, null)

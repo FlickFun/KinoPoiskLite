@@ -16,6 +16,7 @@
 package com.fsoftstudio.kinopoisklite.ui.screens.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -30,12 +31,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.fsoftstudio.kinopoisklite.ui.adapters.PostersGridAdapter
 import com.fsoftstudio.kinopoisklite.databinding.FragmentHomeBinding
-import com.fsoftstudio.kinopoisklite.domain.usecase.AppUseCase
+import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaSearchUseCase
 import com.fsoftstudio.kinopoisklite.ui.screens.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -46,7 +46,14 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     @Inject
-    lateinit var appUseCase: AppUseCase
+    lateinit var listCinemaSearchUseCase: ListCinemaSearchUseCase
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (MainActivity.isFragmentReadyToChangeTheme) {
+            MainActivity.isFragmentReadyToChangeTheme = false
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,13 +62,14 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        if (MainActivity.isFragmentReadyToChangeTheme) {
-            MainActivity.isFragmentReadyToChangeTheme = false
-            collectViewModels()
-            homeFlowViewModel.sendToDomainThatReadyShowPosters(binding)
-        }
+        collectViewModels()
 
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        homeFlowViewModel.sendToDomainThatReadyShowPosters(binding)
     }
 
     override fun onDestroyView() {
@@ -79,7 +87,7 @@ class HomeFragment : Fragment() {
                         if (it.isNotEmpty()) {
                             homeFlowViewModel.showLogo(false, binding)
                             gridViewMovies.adapter =
-                                PostersGridAdapter(moviePosters)
+                                PostersGridAdapter(moviePosters, listCinemaSearchUseCase)
                             binding.pbGvMovieHome.visibility = GONE
                         }
                     }
@@ -95,7 +103,7 @@ class HomeFragment : Fragment() {
                         if (it.isNotEmpty()) {
                             homeFlowViewModel.showLogo(false, binding)
                             gridViewTvSeries.adapter =
-                                PostersGridAdapter(tvSeriesPosters)
+                                PostersGridAdapter(tvSeriesPosters, listCinemaSearchUseCase)
                             binding.pbGvTvSeriesHome.visibility = GONE
                         }
                     }

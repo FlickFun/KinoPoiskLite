@@ -4,16 +4,36 @@
     <style name="tv_movie_tv_series_list">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginTop">16dp</item>
         <item name="android:textSize">25sp</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
+
+    <style name="tv_movie_tv_series_rc_view">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">300dp</item>
+        <item name="android:layout_marginBottom">1dp</item>
+        <item name="android:alpha">0</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_marginStart">8dp</item>
+    </style>
+
+    <style name="tv_movie_tv_series_card_rc_view">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:elevation">8dp</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:layout_marginStart">8dp</item>
+    </style>
+
 
     <style name="tv_nothing_find_list">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">5dp</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textStyle">italic</item>
         <item name="android:gravity">start</item>
     </style>

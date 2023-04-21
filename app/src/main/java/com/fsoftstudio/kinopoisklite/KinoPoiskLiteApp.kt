@@ -19,6 +19,7 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import com.fsoftstudio.kinopoisklite.common.Logger
 import com.fsoftstudio.kinopoisklite.workers.InitNotifyCheckChangePostersWorker
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -27,11 +28,12 @@ import javax.inject.Inject
 class KinoPoiskLiteApp: Application(), Configuration.Provider  {
 
     @Inject lateinit var workerFactory: HiltWorkerFactory
+    @Inject lateinit var logger: Logger
 
     override fun onCreate() {
         super.onCreate()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode())
-        InitNotifyCheckChangePostersWorker(this).checkPosters()
+        InitNotifyCheckChangePostersWorker(this, logger).checkPosters()
 
     }
 

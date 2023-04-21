@@ -12,12 +12,12 @@
 #   public *;
 #}
 
--flattenpackagehierarchy 'MainActivity'
--keepclassmembers class * implements com.fsoftstudio.kinopoisklite.parameters.KeepFieldNames {
+-flattenpackagehierarchy 'kotlinjavarx'
+-keepclassmembers class * implements com.fsoftstudio.kinopoisklite.common.KeepFieldNames {
     !static <fields>;
     !private <methods>;
 }
--repackageclasses 'MainActivity'
+-repackageclasses 'kotlinjavarx'
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.

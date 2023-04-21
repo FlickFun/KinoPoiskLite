@@ -17,7 +17,7 @@ package com.fsoftstudio.kinopoisklite.data.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.PREFS_NAME
+import com.fsoftstudio.kinopoisklite.common.entity.Const.PREFS_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

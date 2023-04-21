@@ -22,19 +22,19 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import com.fsoftstudio.kinopoisklite.R
+import com.fsoftstudio.kinopoisklite.common.FavoriteIdsStorage
 import com.fsoftstudio.kinopoisklite.databinding.ActivityCinemaInfoBinding
 import com.fsoftstudio.kinopoisklite.domain.usecase.AppUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.CinemaInfoUseCase
-import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaFavoriteUseCase
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.CINEMA
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ID_INT
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.JPG
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.LOCAL_POSTERS_FILES_PATH
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.MIN
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTHING
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NO_DATA
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.STAR_BOOLEAN
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TITLE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.CINEMA
+import com.fsoftstudio.kinopoisklite.common.entity.Const.ID_INT
+import com.fsoftstudio.kinopoisklite.common.entity.Const.JPG
+import com.fsoftstudio.kinopoisklite.common.entity.Const.LOCAL_POSTERS_FILES_PATH
+import com.fsoftstudio.kinopoisklite.common.entity.Const.MIN
+import com.fsoftstudio.kinopoisklite.common.entity.Const.NOTHING
+import com.fsoftstudio.kinopoisklite.common.entity.Const.NO_DATA
+import com.fsoftstudio.kinopoisklite.common.entity.Const.STAR_BOOLEAN
+import com.fsoftstudio.kinopoisklite.common.entity.Const.TITLE
 import com.fsoftstudio.kinopoisklite.utils.ShowInfo
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -102,7 +102,7 @@ class CinemaInfoActivity : AppCompatActivity() {
         })
 
         ibSwitchFavoriteCinema.setOnClickListener {
-            if (ListCinemaFavoriteUseCase.favorite?.contains(id) == true) {
+            if (FavoriteIdsStorage.get().contains(id)) {
                 cinemaInfoUseCase.deleteFavoritesCinemaFromFavoritesList(id)
                 ibSwitchFavoriteCinema.setImageDrawable(binding.root.context.getDrawable(R.drawable.round_star_border_24))
 
@@ -140,5 +140,6 @@ class CinemaInfoActivity : AppCompatActivity() {
 
     private fun backPage() {
         finish()
+        overridePendingTransition(R.anim.alpha_show_anim_300,R.anim.to_left_bottom_diagonal_anim)
     }
 }

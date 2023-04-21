@@ -19,9 +19,9 @@ import com.fsoftstudio.kinopoisklite.data.CinemaDataRepository
 import com.fsoftstudio.kinopoisklite.data.cinema.entities.*
 import com.fsoftstudio.kinopoisklite.data.cinema.sources.CinemaTMDbLocalDataSource
 import com.fsoftstudio.kinopoisklite.data.cinema.sources.CinemaTMDbRemoteDataSource
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.ERROR_WRONG_CATEGORY
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.MOVIE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.TV_SERIES
+import com.fsoftstudio.kinopoisklite.common.entity.Const.ERROR_WRONG_CATEGORY
+import com.fsoftstudio.kinopoisklite.common.entity.Const.MOVIE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.TV_SERIES
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 import javax.inject.Inject

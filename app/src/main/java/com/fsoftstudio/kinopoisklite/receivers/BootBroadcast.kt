@@ -19,18 +19,20 @@ import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp
+import com.fsoftstudio.kinopoisklite.common.Logger
 import com.fsoftstudio.kinopoisklite.workers.InitNotifyCheckChangePostersWorker
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class BootBroadcast : BroadcastReceiver() {
+    @Inject
+    lateinit var logger: Logger
+
     @SuppressLint("UnsafeProtectedBroadcastReceiver")
     override fun onReceive(context: Context?, intent: Intent?) {
-        Log.i(
-            ConstApp.TAG_MOVIE_BASE,
-            "Enter BroadcastReceiver() -> "
-        )
-        InitNotifyCheckChangePostersWorker(context?.applicationContext!!).checkPosters()
+        logger.log("Enter BroadcastReceiver() ->")
+        InitNotifyCheckChangePostersWorker(context?.applicationContext!!, logger).checkPosters()
     }
 
 }

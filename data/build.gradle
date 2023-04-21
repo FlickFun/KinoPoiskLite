@@ -7,14 +7,11 @@ plugins {
 
 android {
     signingConfigs {
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
         release {
-            storeFile file(properties.getProperty('appPrivateKey'))
-            keyAlias properties.getProperty('keyAlias')
-            storePassword properties.getProperty('storePassword')
-            keyPassword properties.getProperty('keyPassword')
+            storeFile storeFilePr
+            keyAlias keyAliasPr
+            storePassword storePasswordPr
+            keyPassword keyPasswordPr
         }
     }
     namespace 'com.fsoftstudio.kinopoisklite.data'
@@ -24,7 +21,7 @@ android {
         minSdk minAndroidSdk
         targetSdk targetAndroidSdk
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner testInstrumentationRunnerNow
         consumerProguardFiles "consumer-rules.pro"
 
         javaCompileOptions {
@@ -41,13 +38,13 @@ android {
     buildTypes {
         release {
 //            isShrinkResources = true
-            minifyEnabled = true
+            minifyEnabled = minifyEnabledRelease
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
         debug {
 //            isShrinkResources = false
-            minifyEnabled = false
+            minifyEnabled = minifyEnabledDebug
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -91,4 +88,6 @@ dependencies {
     // firebase
     implementation platform(Libs.Google.firebaseBomPlatform)
     implementation Libs.Google.firebasedatabaseKtx
+
+    implementation project(Modules.Core.Common)
 }

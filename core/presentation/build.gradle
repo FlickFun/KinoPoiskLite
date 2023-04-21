@@ -1,0 +1,60 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    signingConfigs {
+        release {
+            storeFile storeFilePr
+            keyAlias keyAliasPr
+            storePassword storePasswordPr
+            keyPassword keyPasswordPr
+        }
+    }
+
+    namespace 'com.fsoftstudio.kinopoisklite.presentation'
+    compileSdk compileAndroidSdk
+
+    defaultConfig {
+        minSdk minAndroidSdk
+        targetSdk targetAndroidSdk
+
+        testInstrumentationRunner testInstrumentationRunnerNow
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+//            isShrinkResources = true
+            minifyEnabled = minifyEnabledRelease
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+//            isShrinkResources = false
+            minifyEnabled = minifyEnabledDebug
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation Libs.Android.CoreKtx
+    implementation Libs.Android.AppCompat
+    implementation Libs.Android.LifecycleRuntimeKtx
+    implementation Libs.Android.FragmentKtx
+
+    implementation Libs.Google.Material
+
+    api project(Modules.Core.Common)
+}

@@ -86,6 +86,13 @@
                     android:text="@string/system_themes" />
             </RadioGroup>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/b_clean_cache"
+                android:layout_width="wrap_content"
+                style="@style/b_login_auth"
+                android:backgroundTint="?attr/colorPrimaryVariant"
+                android:text="@string/clean_cache"
+                android:visibility="visible" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/b_logout"

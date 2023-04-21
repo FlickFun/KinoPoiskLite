@@ -25,17 +25,17 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.fsoftstudio.kinopoisklite.R
+import com.fsoftstudio.kinopoisklite.common.CommonUi
 import com.fsoftstudio.kinopoisklite.data.SettingsDataRepository
 import com.fsoftstudio.kinopoisklite.databinding.FragmentProfileBinding
 import com.fsoftstudio.kinopoisklite.domain.models.User
 import com.fsoftstudio.kinopoisklite.domain.usecase.AppUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.UserProfileUseCase
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.OK
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.THEME_BATTERY
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.THEME_DARK
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.THEME_LIGHT
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.THEME_SYSTEM
-import com.fsoftstudio.kinopoisklite.utils.ShowInfo
+import com.fsoftstudio.kinopoisklite.common.entity.Const.OK
+import com.fsoftstudio.kinopoisklite.common.entity.Const.THEME_BATTERY
+import com.fsoftstudio.kinopoisklite.common.entity.Const.THEME_DARK
+import com.fsoftstudio.kinopoisklite.common.entity.Const.THEME_LIGHT
+import com.fsoftstudio.kinopoisklite.common.entity.Const.THEME_SYSTEM
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -48,7 +48,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
 
     @Inject
-    lateinit var showInfo: ShowInfo
+    lateinit var commonUi: CommonUi
 
     @Inject
     lateinit var settingsDataRepository: SettingsDataRepository
@@ -90,6 +90,9 @@ class ProfileFragment : Fragment() {
                 changeForm(it)
             }
         }
+        iLayoutProfileInfo.bCleanCache.setOnClickListener {
+            cleanCache()
+        }
         iLayoutProfileInfo.bLogout.setOnClickListener {
             exitProfile()
         }
@@ -103,7 +106,7 @@ class ProfileFragment : Fragment() {
             if (message == OK) {
                 UserProfileUseCase.user?.let { setUserDataAndShowProfile() }
             } else {
-                showInfo.toast(message, this.requireContext())
+                commonUi.toast(message)
             }
         }
     }
@@ -139,6 +142,10 @@ class ProfileFragment : Fragment() {
             if (singUp) getString(R.string.title_signup) else getString(R.string.title_login)
         tvSignInSignUpBottom.text =
             if (singUp) getString(R.string.login) else getString(R.string.signup)
+    }
+
+    private fun cleanCache() {
+        settingsDataRepository.cleanCache()
     }
 
     private fun exitProfile() {

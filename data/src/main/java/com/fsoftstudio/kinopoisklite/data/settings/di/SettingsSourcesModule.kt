@@ -4,8 +4,8 @@ import com.fsoftstudio.kinopoisklite.data.cinema.sources.*
 import com.fsoftstudio.kinopoisklite.data.movies.sources.*
 import com.fsoftstudio.kinopoisklite.data.settings.sources.FirebaseSettingsRemoteDataSource
 import com.fsoftstudio.kinopoisklite.data.settings.sources.SettingsLocalDataSource
+import com.fsoftstudio.kinopoisklite.data.settings.sources.SettingsLocalDataSourceImpl
 import com.fsoftstudio.kinopoisklite.data.settings.sources.SettingsRemoteDataSource
-import com.fsoftstudio.kinopoisklite.data.settings.sources.SharedPrefsSettingsLocalDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -25,7 +25,7 @@ interface SettingsSourcesModule {
     @Binds
     @Singleton
     fun bindSettingsLocalDataSource(
-        roomCinemaTMDbDataSource: SharedPrefsSettingsLocalDataSource
+        settingsLocalDataSourceImpl: SettingsLocalDataSourceImpl
     ): SettingsLocalDataSource
 
 }

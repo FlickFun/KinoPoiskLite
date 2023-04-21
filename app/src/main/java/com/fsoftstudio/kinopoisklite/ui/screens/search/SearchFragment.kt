@@ -26,8 +26,9 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fsoftstudio.kinopoisklite.ui.adapters.ListCinemaRcAdapter
 import com.fsoftstudio.kinopoisklite.databinding.FragmentSearchBinding
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.MOVIE
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TV_SERIES
+import com.fsoftstudio.kinopoisklite.common.entity.Const.MOVIE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.TV_SERIES
+import com.fsoftstudio.kinopoisklite.presentation.animateDefault
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -121,6 +122,7 @@ class SearchFragment : Fragment() {
                 listMovieRcAdapter.updateRcAdapter(newPosters = searchMovies)
             }
             pbRvMovieSearch.visibility = GONE
+            rvMovieSearch.animateDefault()
         }
 
         searchViewModel.tvSeriesPosters.observe(viewLifecycleOwner) { searchTvSeries ->
@@ -134,6 +136,7 @@ class SearchFragment : Fragment() {
                 listTvSeriesRcAdapter.updateRcAdapter(newPosters = searchTvSeries)
             }
             pbRvTvSeriesSearch.visibility = GONE
+            rvTvSeriesSearch.animateDefault()
         }
     }
 

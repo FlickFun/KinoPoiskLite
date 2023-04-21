@@ -40,4 +40,8 @@ class SettingsDataRepositoryImpl @Inject constructor(
     override fun saveBootAutoStart(bootAutoStart: Int) =
         settingsLocalDataSource.saveBootAutoStart(bootAutoStart)
 
+    override fun cleanCache() {
+        settingsLocalDataSource.cleanCache()
+    }
+
 }

@@ -22,7 +22,7 @@ import com.fsoftstudio.kinopoisklite.data.movies.entities.RoomMoviePosterDataEnt
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class RoomMoviesTMDbLocalDataSource(
+class RoomMoviesTMDbLocalDataSource (
     private val moviesTMDbDao: MoviesTMDbDao,
     private val moviesTMDbFtsDao: MoviesTMDbFtsDao,
 ) : MoviesTMDbLocalDataSource {
@@ -49,5 +49,9 @@ class RoomMoviesTMDbLocalDataSource(
             }
         }
         emit(moviesTMDbDao.loadMovieEntityByText(cinema, searchText))
+    }
+
+    override suspend fun deleteMoviePopularEntities() {
+            moviesTMDbDao.deleteListRoomMoviePosterDataEntities(moviesTMDbDao.loadMoviePosterEntities())
     }
 }

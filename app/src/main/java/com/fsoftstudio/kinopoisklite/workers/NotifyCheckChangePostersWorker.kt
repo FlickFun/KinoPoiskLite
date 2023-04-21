@@ -27,18 +27,17 @@ import android.graphics.Color
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.fsoftstudio.kinopoisklite.R
+import com.fsoftstudio.kinopoisklite.common.Logger
 import com.fsoftstudio.kinopoisklite.domain.usecase.AppUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.PostersUseCase
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTIFICATION_CHANNEL
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTIFICATION_ID
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTIFICATION_NAME
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TAG_MOVIE_BASE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.NOTIFICATION_CHANNEL
+import com.fsoftstudio.kinopoisklite.common.entity.Const.NOTIFICATION_ID
+import com.fsoftstudio.kinopoisklite.common.entity.Const.NOTIFICATION_NAME
 import com.fsoftstudio.kinopoisklite.ui.screens.MainActivity
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -50,14 +49,12 @@ class NotifyCheckChangePostersWorker @AssistedInject constructor(
     @Assisted ctx: Context,
     @Assisted param: WorkerParameters,
     private val postersUseCase: PostersUseCase,
-    private val appUseCase: AppUseCase
+    private val appUseCase: AppUseCase,
+    private val logger: Logger
 ) : CoroutineWorker(ctx, param) {
 
     override suspend fun doWork(): Result {
-        Log.i(
-            TAG_MOVIE_BASE,
-            "Enter doWork() -> "
-        )
+        logger.log("Enter doWork() ->")
         val id = inputData.getLong(NOTIFICATION_ID, 0).toInt()
         return try {
             withContext(IO) {
@@ -68,19 +65,13 @@ class NotifyCheckChangePostersWorker @AssistedInject constructor(
                     if (isPostersChanged) {
                         sendNotification(id)
                     }
-                    Log.i(
-                        TAG_MOVIE_BASE,
-                        "Take checkChangePoster callback = $isPostersChanged -> then maybe check and sendNotification($id) ->"
-                    )
+                    logger.log("Take checkChangePoster callback = $isPostersChanged -> then maybe check and sendNotification($id) ->")
                 }
             }
-            Log.i(TAG_MOVIE_BASE, "Before Result.success() -> ")
+            logger.log("Before Result.success() ->")
             Result.success()
         } catch (e: Exception) {
-            Log.i(
-                TAG_MOVIE_BASE,
-                "Error NotifyCheckChangePostersWorker -> $e"
-            )
+            logger.err(e,"NotifyCheckChangePostersWorker ->")
             Result.failure()
         }
     }

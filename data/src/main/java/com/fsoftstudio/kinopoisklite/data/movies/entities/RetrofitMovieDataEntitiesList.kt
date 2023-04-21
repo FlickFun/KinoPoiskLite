@@ -15,7 +15,7 @@
  */
 package com.fsoftstudio.kinopoisklite.data.movies.entities
 
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.NO_DATA
+import com.fsoftstudio.kinopoisklite.common.entity.Const.NO_DATA
 import com.google.gson.annotations.SerializedName
 
 data class RetrofitMovieDataEntitiesList(

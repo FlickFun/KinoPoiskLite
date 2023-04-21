@@ -18,8 +18,6 @@ package com.fsoftstudio.kinopoisklite.domain.usecase
 import com.fsoftstudio.kinopoisklite.data.FavoritesDataRepository
 import com.fsoftstudio.kinopoisklite.domain.mappers.PosterMapper
 import com.fsoftstudio.kinopoisklite.domain.ui.UiListCinemaFavorite
-import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinema
-import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinemaImp
 import com.fsoftstudio.kinopoisklite.ui.screens.favorite.FavoriteViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -28,12 +26,11 @@ import javax.inject.Inject
 
 
 class ListCinemaFavoriteUseCase @Inject constructor(
-    private val favoriteCinemaImp: FavoriteCinemaImp,
     private val favoritesDataRepository: FavoritesDataRepository,
     private val posterMapper: PosterMapper,
     private val uiListCinemaFavorite: UiListCinemaFavorite,
     private val userProfileUseCase: UserProfileUseCase
-) : FavoriteCinema {
+) {
 
     private var favoriteViewModel: FavoriteViewModel? = null
 
@@ -77,17 +74,4 @@ class ListCinemaFavoriteUseCase @Inject constructor(
                 })
         )
 
-    override fun addFavoritesCinemaToFavoritesList(id: Int) {
-        favoriteCinemaImp.addFavoritesCinemaToFavoritesList(id)
-    }
-
-    override fun deleteFavoritesCinemaFromFavoritesList(id: Int) {
-        favoriteCinemaImp.deleteFavoritesCinemaFromFavoritesList(id)
-    }
-
-    companion object {
-
-        @JvmStatic
-        var favorite: HashSet<Int>? = null
-    }
 }

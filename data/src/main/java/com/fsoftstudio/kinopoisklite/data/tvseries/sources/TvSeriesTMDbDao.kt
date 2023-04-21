@@ -40,4 +40,6 @@ interface TvSeriesTMDbDao {
     @Query("SELECT * FROM $CINEMA_INFO_ENTITY WHERE $TC_CIE_CINEMA = :cinema AND $TC_CIE_TITLE LIKE '%' || :searchText || '%' ORDER BY $TC_CIE_POPULARITY DESC")
     fun loadTvSeriesEntityByText(cinema: String, searchText: String): Single<List<RoomCinemaInfoDataEntity>>
 
+    @Delete (entity = RoomTvSeriesPosterEntity::class)
+    fun delete(list: List<RoomTvSeriesPosterEntity>)
 }

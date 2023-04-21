@@ -1,0 +1,60 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+android {
+
+    signingConfigs {
+        release {
+            storeFile storeFilePr
+            keyAlias keyAliasPr
+            storePassword storePasswordPr
+            keyPassword keyPasswordPr
+        }
+    }
+
+    namespace 'ccom.fsoftstudio.kinopoisklite.common_impl'
+    compileSdk compileAndroidSdk
+
+    defaultConfig {
+        minSdk minAndroidSdk
+        targetSdk targetAndroidSdk
+
+        testInstrumentationRunner testInstrumentationRunnerNow
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+//            isShrinkResources = true
+            minifyEnabled = minifyEnabledRelease
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+//            isShrinkResources = false
+            minifyEnabled = minifyEnabledDebug
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    // hilt
+    implementation Libs.Google.Hilt
+    kapt Libs.Google.HiltCompilerKapt
+    implementation Libs.Android.FragmentKtx
+
+    implementation project(Modules.Core.Common)
+}

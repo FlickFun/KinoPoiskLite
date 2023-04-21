@@ -15,7 +15,7 @@
  */
 package com.fsoftstudio.kinopoisklite.data.di
 
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.MAIN_NODE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.MAIN_NODE
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase

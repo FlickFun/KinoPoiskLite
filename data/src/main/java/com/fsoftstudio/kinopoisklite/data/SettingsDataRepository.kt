@@ -14,5 +14,6 @@ interface SettingsDataRepository {
 
     fun getBootAutoStart() : Int
     fun saveBootAutoStart(bootAutoStart: Int)
+    fun cleanCache()
 
 }

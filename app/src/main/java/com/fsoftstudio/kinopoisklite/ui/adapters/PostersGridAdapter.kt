@@ -16,27 +16,27 @@
 package com.fsoftstudio.kinopoisklite.ui.adapters
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageView
-import com.fsoftstudio.kinopoisklite.R
+import com.fsoftstudio.kinopoisklite.common.FavoriteIdsStorage
 import com.fsoftstudio.kinopoisklite.databinding.CardPosterBinding
 import com.fsoftstudio.kinopoisklite.domain.models.Poster
-import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaFavoriteUseCase
+import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaSearchUseCase
 import com.fsoftstudio.kinopoisklite.ui.screens.MainActivity
-import com.fsoftstudio.kinopoisklite.utils.ImagesDownloader
+import com.fsoftstudio.kinopoisklite.presentation.animateWithStartDelay
+import com.fsoftstudio.kinopoisklite.utils.changeFavorite
+import com.fsoftstudio.kinopoisklite.utils.setCheckedFavorite
+import com.fsoftstudio.kinopoisklite.utils.setPopularPosterImage
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
-import java.io.File
 
 
-class PostersGridAdapter(private val posters: List<Poster>) : BaseAdapter() {
+class PostersGridAdapter constructor(
+    private val posters: List<Poster>,
+    private val listCinemaSearchUseCase: ListCinemaSearchUseCase
+) : BaseAdapter() {
 
     override fun getCount(): Int {
         return posters.size
@@ -53,55 +53,32 @@ class PostersGridAdapter(private val posters: List<Poster>) : BaseAdapter() {
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 
-        val poster: CardPosterBinding = if (convertView == null) {
+        val posterBinding: CardPosterBinding = if (convertView == null) {
             CardPosterBinding.inflate(LayoutInflater.from(parent!!.context), parent, false)
         } else {
             CardPosterBinding.bind(convertView)
         }.apply {
-            ivPoster.setPopularPosterImage(this, position)
-            tvPoster.text = posters[position].title
-            llCardPoster.setOnClickListener {
-                posters[position].apply {
-                    favorite = ListCinemaFavoriteUseCase.favorite?.contains(id) == true
-                }
-                MainActivity.mainActivity?.openCinemaInfo(posters[position])
+            val poster = posters[position]
+            ivPoster.setPopularPosterImage(this, poster)
+            CoroutineScope(Main).launch {
+
+                ivSwitchFavoritePoster.setCheckedFavorite(
+                    FavoriteIdsStorage.get().contains(poster.id)
+                )
+                ivSwitchFavoritePoster.animateWithStartDelay(500)
+
+                tvPoster.text = poster.title
+                tvPoster.animateWithStartDelay(500)
+            }
+
+            ivSwitchFavoritePoster.setOnClickListener {
+                ivSwitchFavoritePoster.changeFavorite(poster, listCinemaSearchUseCase)
+            }
+
+            clCardPoster.setOnClickListener {
+                MainActivity.mainActivity?.openCinemaInfo(poster)
             }
         }
-
-        return poster.root
+        return posterBinding.root
     }
-
-    private fun ImageView.setPopularPosterImage(poster: CardPosterBinding, position: Int) =
-        with(poster) {
-            val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ ->
-            }
-            CoroutineScope(IO).launch(coroutineExceptionHandler) {
-                fun showPoster() {
-                    ivPoster.visibility = VISIBLE
-                    pbPoster.visibility = GONE
-                }
-
-                when (val posterPath = posters[position].posterPath) {
-                    null -> {
-                        withContext(Main) {
-                            setImageResource(R.drawable.round_no_photography_24)
-                            showPoster()
-                        }
-                    }
-                    else -> {
-                        ImagesDownloader().getImage(
-                            posterPath,
-                            posters[position].id.toString(),
-                            ivPoster,
-                            pbPoster
-                        ) {
-                            launch(Main) {
-                                setImageURI(Uri.fromFile(File(it)))
-                                showPoster()
-                            }
-                        }
-                    }
-                }
-            }
-        }
 }

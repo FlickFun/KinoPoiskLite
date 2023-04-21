@@ -16,28 +16,22 @@
 package com.fsoftstudio.kinopoisklite.ui.adapters
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.view.LayoutInflater
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.fsoftstudio.kinopoisklite.R
+import com.fsoftstudio.kinopoisklite.common.FavoriteIdsStorage
 import com.fsoftstudio.kinopoisklite.databinding.CardSearchBinding
 import com.fsoftstudio.kinopoisklite.domain.models.Poster
-import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaFavoriteUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaSearchUseCase
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.FRAGMENT_DEFAULT
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.FRAGMENT_FAVORITE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.FRAGMENT_DEFAULT
+import com.fsoftstudio.kinopoisklite.common.entity.Const.FRAGMENT_FAVORITE
 import com.fsoftstudio.kinopoisklite.ui.screens.MainActivity
-import com.fsoftstudio.kinopoisklite.utils.ImagesDownloader
+import com.fsoftstudio.kinopoisklite.utils.changeFavorite
+import com.fsoftstudio.kinopoisklite.utils.setCheckedFavorite
+import com.fsoftstudio.kinopoisklite.utils.setPosterImage
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
-import java.io.File
 import java.util.*
 import javax.inject.Inject
 
@@ -48,12 +42,11 @@ class ListCinemaRcAdapter @Inject constructor(
 
     @Volatile
     private var posters = mutableListOf<Poster>()
-    private var favoriteHashSet: HashSet<Int>? = null
     private var fromFragment: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder {
         val binding = CardSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SearchHolder(binding, listCinemaSearchUseCase, favoriteHashSet, this, fromFragment)
+        return SearchHolder(binding, listCinemaSearchUseCase, this, fromFragment)
     }
 
     override fun onBindViewHolder(holder: SearchHolder, position: Int) {
@@ -67,8 +60,9 @@ class ListCinemaRcAdapter @Inject constructor(
     @SuppressLint("NotifyDataSetChanged")
     fun updateRcAdapter(newPosters: List<Poster> = posters, fromFragment: Int = FRAGMENT_DEFAULT) {
         this.fromFragment = fromFragment
-        favoriteHashSet = ListCinemaFavoriteUseCase.favorite
-        newPosters.forEach { e -> e.favorite = favoriteHashSet?.contains(e.id) ?: false }
+        newPosters.forEach { e ->
+            e.favorite = FavoriteIdsStorage.get().contains(e.id)
+        }
 
         val diffResult =
             DiffUtil.calculateDiff(DiffUtilForListsChangedAnimation(posters, newPosters))
@@ -81,7 +75,7 @@ class ListCinemaRcAdapter @Inject constructor(
         CoroutineScope(Main).launch {
             delay(300)
             posters[position].apply {
-                favorite = ListCinemaFavoriteUseCase.favorite?.contains(id) == true
+                favorite = FavoriteIdsStorage.get().contains(id)
             }
             notifyItemChanged(position)
         }
@@ -90,13 +84,12 @@ class ListCinemaRcAdapter @Inject constructor(
     class SearchHolder(
         private val binding: CardSearchBinding,
         private val listCinemaSearchUseCase: ListCinemaSearchUseCase,
-        private val favoriteHashSet: HashSet<Int>?,
         private val listCinemaRcAdapter: ListCinemaRcAdapter,
         private val fromFragment: Int
     ) : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
         fun onBind(poster: Poster, position: Int) = with(binding) {
-            ivSearch.setPosterImage(poster.posterPath, poster.id.toString(), pbListItem)
+            ivSearch.setPosterImage(poster, pbListItem)
             ibSwitchFavoriteInfo.setCheckedFavorite(poster.favorite)
             tvMovieNameFindItem.text = poster.title
             cvItem.setOnClickListener {
@@ -107,7 +100,7 @@ class ListCinemaRcAdapter @Inject constructor(
                 }
             }
             ibSwitchFavoriteInfo.setOnClickListener {
-                ibSwitchFavoriteInfo.changeFavorite(poster)
+                ibSwitchFavoriteInfo.changeFavorite(poster, listCinemaSearchUseCase)
                 if (fromFragment == FRAGMENT_FAVORITE) {
                     listCinemaRcAdapter.updateRcAdapter(newPosters = mutableListOf<Poster>().apply {
                         addAll(listCinemaRcAdapter.posters)
@@ -117,66 +110,6 @@ class ListCinemaRcAdapter @Inject constructor(
                     }, fromFragment = FRAGMENT_FAVORITE)
                 }
             }
-        }
-
-        @SuppressLint("UseCompatLoadingForDrawables")
-        private fun ImageView.setPosterImage(
-            posterPath: String?,
-            posterId: String,
-            pbListItem: ProgressBar
-        ) {
-            when (posterPath) {
-                null -> {
-                    setImageDrawable(binding.root.context.getDrawable(R.drawable.round_no_photography_24))
-                    visibility = VISIBLE
-                    pbListItem.visibility = GONE
-                }
-                else -> {
-                    val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ ->
-                    }
-                    CoroutineScope(IO).launch(coroutineExceptionHandler) {
-                        ImagesDownloader().getImage(
-                            posterPath,
-                            posterId,
-                            this@setPosterImage,
-                            pbListItem
-                        ) {
-                            launch(Main) {
-                                setImageURI(Uri.fromFile(File(it)))
-                                visibility = VISIBLE
-                                pbListItem.visibility = GONE
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private fun ImageView.changeFavorite(
-            poster: Poster
-        ) {
-            val icon = when (favoriteHashSet?.contains(poster.id) == true) {
-                true -> {
-                    poster.favorite = false
-                    listCinemaSearchUseCase.deleteFavoritesCinemaFromFavoritesList(poster.id)
-                    R.drawable.round_star_border_24
-                }
-                false -> {
-                    poster.favorite = true
-                    listCinemaSearchUseCase.addFavoritesCinemaToFavoritesList(poster.id)
-                    listCinemaSearchUseCase.favoriteChecked(poster.id, poster.cinema)
-                    R.drawable.round_star_24
-                }
-            }
-            setImageResource(icon)
-        }
-
-        private fun ImageView.setCheckedFavorite(isChecked: Boolean) {
-            val icon = when (isChecked) {
-                true -> R.drawable.round_star_24
-                false -> R.drawable.round_star_border_24
-            }
-            setImageResource(icon)
         }
     }
 
@@ -209,7 +142,5 @@ class DiffUtilForListsChangedAnimation(
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList?.get(oldItemPosition)?.id == newList?.get(newItemPosition)?.id
                 && oldList?.get(oldItemPosition)?.favorite == newList?.get(newItemPosition)?.favorite
-
     }
-
 }

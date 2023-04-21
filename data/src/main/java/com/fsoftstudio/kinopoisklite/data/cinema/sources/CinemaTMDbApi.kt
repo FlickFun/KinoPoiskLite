@@ -17,16 +17,16 @@ package com.fsoftstudio.kinopoisklite.data.cinema.sources
 
 import com.fsoftstudio.kinopoisklite.data.cinema.entities.RetrofitCinemaActorDataEntitiesList
 import com.fsoftstudio.kinopoisklite.data.cinema.entities.RetrofitCinemaInfoDataEntity
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.API_KEY
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.APPEND_TO_RESPONSE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.APPEND_TO_RESPONSE_VALUE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.CREDITS_ACTORS
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.INCLUDE_IMAGE_LANGUAGE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.INCLUDE_IMAGE_LANGUAGE_VALUE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.LANGUAGE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.LANGUAGE_VALUE
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.MOVIE_INFO
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.TV_SERIES_INFO
+import com.fsoftstudio.kinopoisklite.common.entity.Const.API_KEY
+import com.fsoftstudio.kinopoisklite.common.entity.Const.APPEND_TO_RESPONSE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.APPEND_TO_RESPONSE_VALUE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.CREDITS_ACTORS
+import com.fsoftstudio.kinopoisklite.common.entity.Const.INCLUDE_IMAGE_LANGUAGE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.INCLUDE_IMAGE_LANGUAGE_VALUE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.LANGUAGE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.LANGUAGE_VALUE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.MOVIE_INFO
+import com.fsoftstudio.kinopoisklite.common.entity.Const.TV_SERIES_INFO
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

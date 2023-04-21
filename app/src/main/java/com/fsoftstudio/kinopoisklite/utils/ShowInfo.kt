@@ -17,7 +17,6 @@ package com.fsoftstudio.kinopoisklite.utils
 
 import android.content.Context
 import android.view.View
-import android.widget.Toast
 import com.fsoftstudio.kinopoisklite.R
 import com.fsoftstudio.kinopoisklite.domain.usecase.ExceptionsUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.ExceptionsUseCase.Companion.EXCEPTION_POSTERS
@@ -29,15 +28,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-class ShowInfo @Inject constructor(private val exceptionsUseCase: ExceptionsUseCase) {
+class ShowInfo @Inject constructor(
+    private val exceptionsUseCase: ExceptionsUseCase
+) {
 
-    fun toast(message: String, context: Context, toastLength: Int = Toast.LENGTH_LONG) {
-        CoroutineScope(Dispatchers.Main).launch {
-            Toast.makeText(context, message, toastLength).show()
-        }
-    }
-
-    fun snackbar(message: String, context: Context, view: View, snackbarLength: Int = Snackbar.LENGTH_INDEFINITE) {
+    fun snackbar(
+        message: String,
+        context: Context,
+        view: View,
+        snackbarLength: Int = Snackbar.LENGTH_INDEFINITE
+    ) {
         CoroutineScope(Dispatchers.Main).launch {
             Snackbar.make(view, message, snackbarLength)
                 .setAction(context.getString(R.string.ok)) {

@@ -29,4 +29,9 @@ interface CinemaTMDbDao {
     @Insert(entity = RoomCinemaInfoDataEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveCinemaInfoEntity(roomCinemaInfoDataEntity: RoomCinemaInfoDataEntity)
 
+    @Query("SELECT * FROM $CINEMA_INFO_ENTITY")
+    suspend fun loadAllRoomCinemaInfoEntities(): List<RoomCinemaInfoDataEntity>
+
+    @Delete (entity = RoomCinemaInfoDataEntity::class)
+    suspend fun deleteListRoomCinemaInfoDataEntities(list: List<RoomCinemaInfoDataEntity>)
 }

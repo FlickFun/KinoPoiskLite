@@ -6,7 +6,7 @@ import com.fsoftstudio.kinopoisklite.data.movies.entities.RetrofitMovieDataEntit
 import com.fsoftstudio.kinopoisklite.data.movies.entities.mapToRemote
 import com.fsoftstudio.kinopoisklite.data.movies.sources.MoviesTMDbRemoteDataSource
 import com.fsoftstudio.kinopoisklite.data.movies.sources.MoviesTMDbLocalDataSource
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.MOVIE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.MOVIE
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat

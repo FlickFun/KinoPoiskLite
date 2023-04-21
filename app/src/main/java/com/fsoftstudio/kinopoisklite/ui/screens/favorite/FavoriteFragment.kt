@@ -30,11 +30,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.fsoftstudio.kinopoisklite.R
+import com.fsoftstudio.kinopoisklite.common.FavoriteIdsStorage
 import com.fsoftstudio.kinopoisklite.databinding.FragmentFavoriteBinding
-import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaFavoriteUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.UserProfileUseCase
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.FRAGMENT_FAVORITE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.FRAGMENT_FAVORITE
 import com.fsoftstudio.kinopoisklite.ui.adapters.ListCinemaRcAdapter
+import com.fsoftstudio.kinopoisklite.presentation.animateDefault
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -87,13 +88,13 @@ class FavoriteFragment : Fragment() {
                 rvMovieFavorite.visibility = VISIBLE
                 tvNoFavoriteMovie.visibility = GONE
 
-                val favoriteSet = getFavoriteHahSet()
-                if (!favoriteSet.isNullOrEmpty()) {
+                if (FavoriteIdsStorage.get().isNotEmpty()) {
                     listMovieRcAdapter.updateRcAdapter(
-                        newPosters = favoriteMovies.filter { e -> favoriteSet.contains(e.id) },
+                        newPosters = favoriteMovies.filter { e -> FavoriteIdsStorage.get().contains(e.id) },
                         fromFragment = FRAGMENT_FAVORITE
                     )
                 }
+                rvMovieFavorite.animateDefault()
             } else {
                 rvMovieFavorite.visibility = GONE
                 tvNoFavoriteMovie.visibility = VISIBLE
@@ -105,21 +106,19 @@ class FavoriteFragment : Fragment() {
                 rvTvSeriesFavorite.visibility = VISIBLE
                 tvNoFavoriteTvSeries.visibility = GONE
 
-                val favoriteSet = getFavoriteHahSet()
-                if (!favoriteSet.isNullOrEmpty()) {
+                if (FavoriteIdsStorage.get().isNotEmpty()) {
                     listTvSeriesRcAdapter.updateRcAdapter(
-                        newPosters = favoriteTvSeries.filter { e -> favoriteSet.contains(e.id) },
+                        newPosters = favoriteTvSeries.filter { e -> FavoriteIdsStorage.get().contains(e.id) },
                         fromFragment = FRAGMENT_FAVORITE
                     )
                 }
+                rvTvSeriesFavorite.animateDefault()
             } else {
                 rvTvSeriesFavorite.visibility = GONE
                 tvNoFavoriteTvSeries.visibility = VISIBLE
             }
         }
     }
-
-    private fun getFavoriteHahSet() = ListCinemaFavoriteUseCase.favorite
 
     private fun String.getFavoriteTitle(): SpannableStringBuilder {
         val favorite = "${getString(R.string.favorite)} - "

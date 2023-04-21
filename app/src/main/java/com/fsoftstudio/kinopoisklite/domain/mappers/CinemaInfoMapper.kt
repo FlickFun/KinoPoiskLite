@@ -2,10 +2,10 @@ package com.fsoftstudio.kinopoisklite.domain.mappers
 
 import com.fsoftstudio.kinopoisklite.data.cinema.entities.*
 import com.fsoftstudio.kinopoisklite.domain.models.CinemaInfo
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.MOVIE
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NO_DATA
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NO_TITLE
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TV_SERIES
+import com.fsoftstudio.kinopoisklite.common.entity.Const.MOVIE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.NO_DATA
+import com.fsoftstudio.kinopoisklite.common.entity.Const.NO_TITLE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.TV_SERIES
 import javax.inject.Inject
 
 class CinemaInfoMapper @Inject constructor(){

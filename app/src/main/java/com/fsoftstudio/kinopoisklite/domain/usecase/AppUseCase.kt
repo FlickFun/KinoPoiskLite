@@ -28,18 +28,18 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import com.fsoftstudio.kinopoisklite.R
+import com.fsoftstudio.kinopoisklite.common.CommonUi
 import com.fsoftstudio.kinopoisklite.data.SettingsDataRepository
 import com.fsoftstudio.kinopoisklite.data.settings.entity.ApiKey
 import com.fsoftstudio.kinopoisklite.domain.ui.UiPosters
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.BOOT_AUTO_START_ASC_LATE
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ERROR_NO_API_KEY_PLEASE_INFORM_DEV
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NOTHING
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.PLEASE_INFORM_DEV
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.THEME_DARK
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.THEME_SYSTEM
+import com.fsoftstudio.kinopoisklite.common.entity.Const.BOOT_AUTO_START_ASC_LATE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.ERROR_NO_API_KEY_PLEASE_INFORM_DEV
+import com.fsoftstudio.kinopoisklite.common.entity.Const.NOTHING
+import com.fsoftstudio.kinopoisklite.common.entity.Const.PLEASE_INFORM_DEV
+import com.fsoftstudio.kinopoisklite.common.entity.Const.THEME_DARK
+import com.fsoftstudio.kinopoisklite.common.entity.Const.THEME_SYSTEM
 import com.fsoftstudio.kinopoisklite.ui.screens.MainActivity
 import com.fsoftstudio.kinopoisklite.utils.BootAutostartPermissionHelper
-import com.fsoftstudio.kinopoisklite.utils.ShowInfo
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.firstOrNull
@@ -49,9 +49,9 @@ import javax.inject.Inject
 class AppUseCase @Inject constructor(
     private val userProfileUseCase: UserProfileUseCase,
     private val exceptionsUseCase: ExceptionsUseCase,
-    private val showInfo: ShowInfo,
     private val uiPoster: UiPosters,
-    private val settingsDataRepository: SettingsDataRepository
+    private val settingsDataRepository: SettingsDataRepository,
+    private val commonUi: CommonUi
 ) {
 
     fun appStarted(ma: MainActivity, compositeDisposable: CompositeDisposable) {
@@ -64,7 +64,7 @@ class AppUseCase @Inject constructor(
     fun setTheme(callback: (Boolean) -> Unit) {
         val savedTheme = settingsDataRepository.getSavedTheme()
         val defaultNightMode = AppCompatDelegate.getDefaultNightMode()
-        if (savedTheme == THEME_SYSTEM && defaultNightMode != MODE_NIGHT_YES || savedTheme != THEME_DARK ) {
+        if (savedTheme == THEME_SYSTEM && defaultNightMode != MODE_NIGHT_YES || savedTheme != THEME_DARK) {
             callback.invoke(true)
         } else {
             AppCompatDelegate.setDefaultNightMode(savedTheme)
@@ -91,7 +91,7 @@ class AppUseCase @Inject constructor(
                     parentFragment?.context?.let { it -> startActivity(it, intent, null) }
                 } catch (ex: Exception) {
                     parentFragment?.context?.let { it ->
-                        showInfo.toast(it.getString(R.string.link_not_opens), it)
+                        commonUi.toast(it.getString(R.string.link_not_opens))
                     }
                 }
             }
@@ -147,7 +147,7 @@ class AppUseCase @Inject constructor(
     }
 
     private suspend fun sendErrorMessageAndRepeatSetApiKey(errorMessage: String) {
-        exceptionsUseCase.showFireBaseExceptionInfo(errorMessage)
+        exceptionsUseCase.showExceptionMessage(errorMessage)
         delay(3_000L)
         setApiKey()
     }

@@ -1,60 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-
-    <LinearLayout
-        android:id="@+id/ll_card_poster"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_card_poster"
         android:layout_width="108dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingVertical="10dp"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical"
+        android:layout_marginTop="16dp"
         android:background="@drawable/click"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingBottom="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_poster"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_iv_poster"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
->
+            android:layout_height="92dp"
+            android:layout_marginTop="8dp"
+            android:alpha="0"
+            android:elevation="2dp"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="?attr/colorTertiary"
+            app:strokeWidth="0.2dp">
 
             <ImageView
                 android:id="@+id/iv_poster"
-                android:layout_width="92dp"
-                android:layout_height="92dp"
-                android:scaleType="fitCenter"
-                android:visibility="invisible"
-                android:src="@drawable/round_insert_photo_24"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/round_insert_photo_24" />
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/tv_poster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:textSize="12sp" />
-    </LinearLayout>
+            android:textSize="12sp"
+            android:alpha="0"
+            app:layout_constraintTop_toBottomOf="@+id/card_iv_poster" />
 
-    <ProgressBar
-        android:id="@+id/pb_poster"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="38dp"
-        app:layout_constraintEnd_toEndOf="@+id/ll_card_poster"
-        app:layout_constraintStart_toStartOf="@+id/ll_card_poster"
-        app:layout_constraintTop_toTopOf="@+id/ll_card_poster"
-        android:visibility="invisible" />
+        <ProgressBar
+            android:id="@+id/pb_poster"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/card_iv_poster"
+            app:layout_constraintEnd_toEndOf="@+id/card_iv_poster"
+            app:layout_constraintStart_toStartOf="@+id/card_iv_poster"
+            app:layout_constraintTop_toTopOf="@+id/card_iv_poster" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv_switch_favorite_poster"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="-6dp"
+        android:alpha="0"
+        android:padding="8dp"
+        android:src="@drawable/round_star_border_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

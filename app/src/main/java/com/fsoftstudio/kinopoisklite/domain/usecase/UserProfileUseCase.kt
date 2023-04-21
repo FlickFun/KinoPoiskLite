@@ -16,17 +16,18 @@
 package com.fsoftstudio.kinopoisklite.domain.usecase
 
 import android.annotation.SuppressLint
+import com.fsoftstudio.kinopoisklite.common.saveToFavorite
 import com.fsoftstudio.kinopoisklite.data.AccountsDataRepository
 import com.fsoftstudio.kinopoisklite.data.FavoritesDataRepository
 import com.fsoftstudio.kinopoisklite.domain.mappers.UserMapper
 import com.fsoftstudio.kinopoisklite.domain.models.User
 import com.fsoftstudio.kinopoisklite.domain.models.mapToRoomUserDataEntity
 import com.fsoftstudio.kinopoisklite.domain.ui.UiUserProfile
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ERROR_EMPTY_FIELD
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ERROR_LOGIN_ALREADY_EXIST
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.ERROR_WRONG_LOGIN_ORE_PASSWORD
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.LOGIN_GUEST
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.OK
+import com.fsoftstudio.kinopoisklite.common.entity.Const.ERROR_EMPTY_FIELD
+import com.fsoftstudio.kinopoisklite.common.entity.Const.ERROR_LOGIN_ALREADY_EXIST
+import com.fsoftstudio.kinopoisklite.common.entity.Const.ERROR_WRONG_LOGIN_ORE_PASSWORD
+import com.fsoftstudio.kinopoisklite.common.entity.Const.LOGIN_GUEST
+import com.fsoftstudio.kinopoisklite.common.entity.Const.OK
 import com.fsoftstudio.kinopoisklite.ui.screens.profile.ProfileViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -62,7 +63,7 @@ class UserProfileUseCase @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                ListCinemaFavoriteUseCase.favorite = it.toHashSet()
+                it.saveToFavorite()
             }, {
 
             })

@@ -28,4 +28,5 @@ interface MoviesTMDbLocalDataSource {
 
     suspend fun searchMovieEntitiesByText(cinema: String, searchText: String): Flow<List<RoomCinemaInfoDataEntity>>
 
+    suspend fun deleteMoviePopularEntities()
 }

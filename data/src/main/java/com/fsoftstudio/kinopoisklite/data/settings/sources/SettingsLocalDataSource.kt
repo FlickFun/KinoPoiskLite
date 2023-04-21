@@ -24,4 +24,6 @@ interface SettingsLocalDataSource {
 
     fun getBootAutoStart() : Int
     fun saveBootAutoStart(bootAutoStart: Int)
+
+    fun cleanCache()
 }

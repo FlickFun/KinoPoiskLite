@@ -26,15 +26,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/iv_info"
-                    android:layout_width="148dp"
-                    android:layout_height="148dp"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_iv_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="50dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/round_insert_photo_24"
+                    android:elevation="4dp"
+                    app:cardCornerRadius="12dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="?attr/colorTertiary"
+                    app:strokeWidth="0.2dp">
+
+                    <ImageView
+                        android:id="@+id/iv_info"
+                        android:layout_width="96dp"
+                        android:layout_height="148dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/round_insert_photo_24"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:id="@+id/tv_title_info"
@@ -42,10 +55,10 @@
                     android:layout_height="wrap_content"
                     android:textSize="22sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/iv_info"
+                    app:layout_constraintBottom_toBottomOf="@+id/card_iv_info"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/iv_info"
-                    app:layout_constraintTop_toTopOf="@+id/iv_info" />
+                    app:layout_constraintStart_toEndOf="@+id/card_iv_info"
+                    app:layout_constraintTop_toTopOf="@+id/card_iv_info" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -170,9 +183,9 @@
         android:id="@+id/ib_back_info"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:background="@drawable/click"
         android:padding="12dp"
         android:scaleType="centerCrop"
-        android:background="@drawable/click"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/round_arrow_back_ios_new_24" />

@@ -4,9 +4,9 @@ import com.fsoftstudio.kinopoisklite.data.cinema.entities.RoomCinemaInfoDataEnti
 import com.fsoftstudio.kinopoisklite.data.movies.entities.RetrofitMoviePosterDataEntity
 import com.fsoftstudio.kinopoisklite.data.tvseries.entities.RetrofitTvSeriesPosterDataEntity
 import com.fsoftstudio.kinopoisklite.domain.models.Poster
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.MOVIE
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.NO_DATA
-import com.fsoftstudio.kinopoisklite.parameters.ConstApp.TV_SERIES
+import com.fsoftstudio.kinopoisklite.common.entity.Const.MOVIE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.NO_DATA
+import com.fsoftstudio.kinopoisklite.common.entity.Const.TV_SERIES
 import javax.inject.Inject
 
 class PosterMapper @Inject constructor() {

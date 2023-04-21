@@ -22,4 +22,6 @@ interface CinemaTMDbLocalDataSource {
     suspend fun loadCinemaInfoEntity(id: Int): RoomCinemaInfoDataEntity
 
     suspend fun saveCinemaInfoEntity(cinemaInfoEntity: RoomCinemaInfoDataEntity)
+
+    suspend fun deleteNotFavoriteCinemaInfoDataEntitiesByIds()
 }

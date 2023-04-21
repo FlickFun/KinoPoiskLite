@@ -14,32 +14,29 @@ android {
         applicationId "com.fsoftstudio.kinopoisklite"
         minSdk minAndroidSdk
         targetSdk targetAndroidSdk
-        versionCode 9
-        versionName "1.0.5"
+        versionCode 11
+        versionName "1.0.6"
 
-        testInstrumentationRunner "com/fsoftstudio/kinopoisklite/HiltAndroidTestRunner"
+        testInstrumentationRunner testInstrumentationRunnerHilt
     }
     signingConfigs {
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
         release {
-            storeFile file(properties.getProperty('appPrivateKey'))
-            keyAlias properties.getProperty('keyAlias')
-            storePassword properties.getProperty('storePassword')
-            keyPassword properties.getProperty('keyPassword')
+            storeFile storeFilePr
+            keyAlias keyAliasPr
+            storePassword storePasswordPr
+            keyPassword keyPasswordPr
         }
     }
     buildTypes {
         release {
 //            isShrinkResources = true
-            minifyEnabled = true
+            minifyEnabled = minifyEnabledRelease
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
         debug {
 //            isShrinkResources = false
-            minifyEnabled = false
+            minifyEnabled = minifyEnabledDebug
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -115,4 +112,7 @@ dependencies {
     implementation Libs.Android.WorkGcm
 
     implementation project(Modules.Data)
+    implementation project(Modules.Core.CommonImpl)
+    implementation project(Modules.Core.Presentation)
+
 }

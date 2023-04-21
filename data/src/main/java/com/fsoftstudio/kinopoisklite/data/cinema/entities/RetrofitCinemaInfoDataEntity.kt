@@ -15,7 +15,7 @@
  */
 package com.fsoftstudio.kinopoisklite.data.cinema.entities
 
-import com.fsoftstudio.kinopoisklite.data.parameters.KeepFieldNames
+import com.fsoftstudio.kinopoisklite.common.KeepFieldNames
 import com.google.gson.annotations.SerializedName
 
 data class RetrofitCinemaInfoDataEntity(

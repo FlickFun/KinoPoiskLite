@@ -15,7 +15,7 @@
  */
 package com.fsoftstudio.kinopoisklite.data.settings.sources
 
-import com.fsoftstudio.kinopoisklite.data.parameters.ConstData.APP_DATA_NODE
+import com.fsoftstudio.kinopoisklite.common.entity.Const.APP_DATA_NODE
 import com.fsoftstudio.kinopoisklite.data.settings.entity.FirebaseSettingsDataEntity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
