@@ -44,7 +44,7 @@
 
 <br/>
 <div align="left">
-  <img src="https://github.com/FlickFun/Files/blob/main/packages_structure_1.png" width="200" />
+  <img src="https://github.com/FlickFun/Files/blob/main/packages_structure_5.png" width="200" />
   <img src="https://github.com/FlickFun/Files/blob/main/packages_structure_2.png" width="200" />
   <img src="https://github.com/FlickFun/Files/blob/main/packages_structure_4.png" width="200" />
 </div>
