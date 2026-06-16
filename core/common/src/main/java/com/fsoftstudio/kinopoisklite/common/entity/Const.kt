@@ -18,13 +18,13 @@ package com.fsoftstudio.kinopoisklite.common.entity
 object Const {
 
     const val TAG_MOVIE_BASE = "MOVIE_BASE"
-    const val LOCAL_POSTERS_FILES_PATH = "data/data/com.fsoftstudio.kinopoisklite/files/posters/"
     const val URI_PATH = "https://image.tmdb.org/t/p/w185"
     const val JPG = ".jpg"
 
     const val LOGIN_GUEST = "Guest"
     const val ID_INT = "id"
     const val TITLE = "title"
+    const val POSTER_PATH_STRING = "posterPath"
     const val STAR_BOOLEAN = "star"
     const val NOTHING = "nothing"
     const val CINEMA = "cinema"

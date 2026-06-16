@@ -15,6 +15,8 @@
  */
 package com.fsoftstudio.kinopoisklite.domain.usecase
 
+import android.util.Log
+import com.fsoftstudio.kinopoisklite.common.Logger
 import com.fsoftstudio.kinopoisklite.data.MoviesDataRepository
 import com.fsoftstudio.kinopoisklite.data.TvSeriesDataRepository
 import com.fsoftstudio.kinopoisklite.data.movies.entities.RetrofitMovieDataEntitiesList
@@ -41,7 +43,8 @@ class ListCinemaSearchUseCase @Inject constructor(
     private val tvSeriesDataRepository: TvSeriesDataRepository,
     private val posterMapper: PosterMapper,
     private val uiListCinemaSearch: UiListCinemaSearch,
-    private val exceptionsUseCase: ExceptionsUseCase
+    private val exceptionsUseCase: ExceptionsUseCase,
+    private val logger: Logger
 ) : FavoriteCinema {
 
     private var searchViewModel: SearchViewModel? = null
@@ -51,9 +54,10 @@ class ListCinemaSearchUseCase @Inject constructor(
         searchText: String,
         searchViewModel: SearchViewModel
     ) {
+        val cleanSearchText = searchText.trim()
         this.searchViewModel = searchViewModel
-        getMovie(searchText)
-        getTvSeries(compositeDisposable, searchText)
+        getMovie(cleanSearchText)
+        getTvSeries(compositeDisposable, cleanSearchText)
     }
 
     private fun getMovie(searchText: String) {
@@ -76,7 +80,8 @@ class ListCinemaSearchUseCase @Inject constructor(
         isNoHasData: Boolean
     ) {
         fun update() {
-            val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ ->
+            val coroutineExceptionHandler = CoroutineExceptionHandler { _, e ->
+                logger.err(e, "updateMovies ->")
                 exceptionsUseCase.showNoInternet(EXCEPTION_POSTERS)
                 if (isNoHasData) {
                     sendShowNoMovieData()

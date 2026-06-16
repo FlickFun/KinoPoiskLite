@@ -14,8 +14,8 @@ android {
         applicationId "com.fsoftstudio.kinopoisklite"
         minSdk minAndroidSdk
         targetSdk targetAndroidSdk
-        versionCode 11
-        versionName "1.0.6"
+        versionCode 12
+        versionName "1.0.7"
 
         testInstrumentationRunner testInstrumentationRunnerHilt
     }
@@ -30,23 +30,28 @@ android {
     buildTypes {
         release {
 //            isShrinkResources = true
-            minifyEnabled = minifyEnabledRelease
+//            minifyEnabled = minifyEnabledRelease
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue("string", "app_name", "KinoPoiskLite")
             signingConfig signingConfigs.release
+
+
         }
         debug {
 //            isShrinkResources = false
             minifyEnabled = minifyEnabledDebug
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue("string", "app_name", "KinoPoiskLite (debug)")
             signingConfig signingConfigs.release
+
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     buildFeatures {
         viewBinding true
@@ -100,6 +105,7 @@ dependencies {
 
     // okhttp3
     implementation Libs.Squareup.okhttp3
+    implementation "com.squareup.okhttp3:okhttp-dnsoverhttps:${okhttp3_version}"
 
     // hilt
     implementation Libs.Google.Hilt
@@ -115,4 +121,14 @@ dependencies {
     implementation project(Modules.Core.CommonImpl)
     implementation project(Modules.Core.Presentation)
 
+    testImplementation Libs.Testing.JUnit
+    androidTestImplementation Libs.Testing.JUnit
+    androidTestImplementation Libs.Testing.ExtJUnit
+    androidTestImplementation Libs.Testing.EspressoCore
+    androidTestImplementation Libs.Testing.TestCore
+    androidTestImplementation Libs.Testing.TestRules
+    androidTestImplementation Libs.Testing.TestRunner
+    androidTestImplementation Libs.Stuff.Coil
+    androidTestImplementation Libs.Google.HiltAndroidTesting
+    kaptAndroidTest Libs.Google.HiltCompilerKapt
 }

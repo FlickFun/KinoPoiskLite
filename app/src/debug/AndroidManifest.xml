@@ -5,9 +5,9 @@
       used for launching Hilt fragments in unit tests
     -->
 
-    <application>
-        <activity android:name=".robolectric.testutils.fragments.TestFragmentActivity"
-            android:exported="false"/>
-    </application>
+<!--    <application>-->
+<!--        <activity android:name=".robolectric.testutils.fragments.TestFragmentActivity"-->
+<!--            android:exported="false"/>-->
+<!--    </application>-->
 
 </manifest>

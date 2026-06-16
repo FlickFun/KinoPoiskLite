@@ -37,8 +37,7 @@ import javax.inject.Inject
 
 class ListCinemaRcAdapter @Inject constructor(
     private val listCinemaSearchUseCase: ListCinemaSearchUseCase
-) :
-    RecyclerView.Adapter<ListCinemaRcAdapter.SearchHolder>() {
+) : RecyclerView.Adapter<ListCinemaRcAdapter.SearchHolder>() {
 
     @Volatile
     private var posters = mutableListOf<Poster>()
@@ -50,7 +49,7 @@ class ListCinemaRcAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: SearchHolder, position: Int) {
-        holder.onBind(posters[position], position)
+        holder.bind(posters[position], position)
     }
 
     override fun getItemCount(): Int {
@@ -88,7 +87,7 @@ class ListCinemaRcAdapter @Inject constructor(
         private val fromFragment: Int
     ) : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
-        fun onBind(poster: Poster, position: Int) = with(binding) {
+        fun bind(poster: Poster, position: Int) = with(binding) {
             ivSearch.setPosterImage(poster, pbListItem)
             ibSwitchFavoriteInfo.setCheckedFavorite(poster.favorite)
             tvMovieNameFindItem.text = poster.title

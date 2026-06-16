@@ -19,6 +19,10 @@
 }
 -repackageclasses 'kotlinjavarx'
 
+-dontwarn ccom.fsoftstudio.kinopoisklite.common_impl.**
+-dontwarn com.fsoftstudio.kinopoisklite.data.**
+-dontwarn com.fsoftstudio.kinopoisklite.presentation.**
+
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable

@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.fsoftstudio.kinopoisklite.R
 import com.fsoftstudio.kinopoisklite.ui.adapters.ListCinemaRcAdapter
 import com.fsoftstudio.kinopoisklite.databinding.FragmentSearchBinding
 import com.fsoftstudio.kinopoisklite.common.entity.Const.MOVIE
@@ -52,12 +53,14 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setOnClickListener()
         initCinemaRecycleView()
         observeViewModel()
-
-        return binding.root
     }
 
     override fun onStart() {
@@ -141,10 +144,10 @@ class SearchFragment : Fragment() {
     }
 
     private fun initCinemaRecycleView() = with(binding) {
-        rvMovieSearch.layoutManager = LinearLayoutManager(this@SearchFragment.context)
+        rvMovieSearch.layoutManager = LinearLayoutManager(requireContext())
         rvMovieSearch.adapter = listMovieRcAdapter
 
-        rvTvSeriesSearch.layoutManager = LinearLayoutManager(this@SearchFragment.context)
+        rvTvSeriesSearch.layoutManager = LinearLayoutManager(requireContext())
         rvTvSeriesSearch.adapter = listTvSeriesRcAdapter
     }
 

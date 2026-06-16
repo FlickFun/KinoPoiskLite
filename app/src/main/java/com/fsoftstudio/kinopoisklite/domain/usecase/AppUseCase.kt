@@ -45,6 +45,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.firstOrNull
 import java.io.File
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 class AppUseCase @Inject constructor(
     private val userProfileUseCase: UserProfileUseCase,
@@ -148,7 +149,7 @@ class AppUseCase @Inject constructor(
 
     private suspend fun sendErrorMessageAndRepeatSetApiKey(errorMessage: String) {
         exceptionsUseCase.showExceptionMessage(errorMessage)
-        delay(3_000L)
+        delay(3_000L.milliseconds)
         setApiKey()
     }
 

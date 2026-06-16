@@ -1,13 +1,15 @@
 package com.fsoftstudio.kinopoisklite.data.Utils
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.fsoftstudio.kinopoisklite.common.CommonUi
 import com.fsoftstudio.kinopoisklite.common.FavoriteIdsStorage
 import com.fsoftstudio.kinopoisklite.common.Logger
 import com.fsoftstudio.kinopoisklite.common.entity.Const.ERROR_CANT_CLEAN_CACHE
-import com.fsoftstudio.kinopoisklite.common.entity.Const.LOCAL_POSTERS_FILES_PATH
 import com.fsoftstudio.kinopoisklite.common.entity.Const.NOTICE_CACHE_CLEARED
+import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -17,13 +19,16 @@ import javax.inject.Inject
 import kotlin.io.path.nameWithoutExtension
 
 class DeleteFiles @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val commonUi: CommonUi,
     private val logger: Logger
 ) {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun deleteAllFilesFromPosterDirectory() =
-        deleteAllFilesFromDirectory(LOCAL_POSTERS_FILES_PATH)
+    fun deleteAllFilesFromPosterDirectory() {
+        val postersDir = File(context.filesDir, "posters")
+        deleteAllFilesFromDirectory(postersDir.absolutePath)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun deleteAllFilesFromDirectory(filesDirectory: String) {

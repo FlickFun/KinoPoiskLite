@@ -1,6 +1,6 @@
 package com.fsoftstudio.kinopoisklite.utils
 
-import android.net.Uri
+import android.graphics.Bitmap
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -11,10 +11,23 @@ import com.fsoftstudio.kinopoisklite.databinding.CardPosterBinding
 import com.fsoftstudio.kinopoisklite.domain.models.Poster
 import com.fsoftstudio.kinopoisklite.domain.usecase.ListCinemaSearchUseCase
 import com.fsoftstudio.kinopoisklite.presentation.animateDefault
-import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import java.io.File
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface ImagesDownloaderEntryPoint {
+    fun imagesDownloader(): ImagesDownloader
+}
+
+private fun getImagesDownloader(view: View): ImagesDownloader {
+    return EntryPointAccessors.fromApplication(
+        view.context.applicationContext,
+        ImagesDownloaderEntryPoint::class.java
+    ).imagesDownloader()
+}
 
 fun ImageView.changeFavorite(
     poster: Poster,
@@ -44,64 +57,41 @@ fun ImageView.setCheckedFavorite(isChecked: Boolean) {
     setImageResource(icon)
 }
 
-fun ImageView.setPopularPosterImage(posterBinding: CardPosterBinding, poster: Poster) = with(posterBinding) {
-    val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ ->
+fun ImageView.setPopularPosterImage(posterBinding: CardPosterBinding, poster: Poster) {
+    if (poster.posterPath == null) {
+        setImageResource(R.drawable.round_no_photography_24)
+        posterBinding.pbPoster.visibility = View.GONE
+        return
     }
-    CoroutineScope(IO).launch(coroutineExceptionHandler) {
-        fun showPoster() {
-            cardIvPoster.animateDefault()
-            pbPoster.visibility = View.GONE
-        }
 
-        when (val posterPath = poster.posterPath) {
-            null -> {
-                withContext(Main) {
-                    setImageResource(R.drawable.round_no_photography_24)
-                    showPoster()
-                }
-            }
-            else -> {
-                ImagesDownloader().getImage(
-                    posterPath,
-                    poster.id.toString(),
-                    ivPoster,
-                    pbPoster
-                ) {
-                    launch(Main) {
-                        setImageURI(Uri.fromFile(File(it)))
-                        showPoster()
-                    }
-                }
-            }
-        }
+    getImagesDownloader(this).getImage(
+        poster.posterPath,
+        poster.id.toString(),
+        this,
+        posterBinding.pbPoster
+    ) { bitmap ->
+        setImageBitmap(bitmap)
+        visibility = View.VISIBLE
+        posterBinding.cardIvPoster.animateDefault()
     }
 }
 
 fun ImageView.setPosterImage(poster: Poster, pbListItem: ProgressBar) {
-    when (poster.posterPath) {
-        null -> {
-            setImageResource(R.drawable.round_no_photography_24)
-            visibility = View.VISIBLE
-            pbListItem.visibility = View.GONE
-        }
-        else -> {
-            val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ ->
-            }
-            CoroutineScope(IO).launch(coroutineExceptionHandler) {
-                ImagesDownloader().getImage(
-                    poster.posterPath.toString(),
-                    poster.id.toString(),
-                    this@setPosterImage,
-                    pbListItem
-                ) {
-                    launch(Main) {
-                        setImageURI(Uri.fromFile(File(it)))
-                        visibility = View.VISIBLE
-                        pbListItem.visibility = View.GONE
-                    }
-                }
-            }
-        }
+    if (poster.posterPath == null) {
+        setImageResource(R.drawable.round_no_photography_24)
+        visibility = View.VISIBLE
+        pbListItem.visibility = View.GONE
+        return
+    }
+
+    getImagesDownloader(this).getImage(
+        poster.posterPath,
+        poster.id.toString(),
+        this,
+        pbListItem
+    ) { bitmap ->
+        setImageBitmap(bitmap)
+        visibility = View.VISIBLE
+        pbListItem.visibility = View.GONE
     }
 }
-

@@ -7,6 +7,7 @@ import com.fsoftstudio.kinopoisklite.data.movies.entities.mapToRemote
 import com.fsoftstudio.kinopoisklite.data.movies.sources.MoviesTMDbRemoteDataSource
 import com.fsoftstudio.kinopoisklite.data.movies.sources.MoviesTMDbLocalDataSource
 import com.fsoftstudio.kinopoisklite.common.entity.Const.MOVIE
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
@@ -30,7 +31,7 @@ class MoviesDataRepositoryImpl @Inject constructor(
             moviesTMDbLocalDataSource.saveListMoviesPosters(it.body()?.results?.take(9))
         }
 
-    @OptIn(FlowPreview::class)
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     override suspend fun getLocalListMovieSearch(searchText: String): Flow<RetrofitMovieDataEntitiesList> {
         return moviesTMDbLocalDataSource.searchMovieEntitiesByText(MOVIE, searchText).flatMapConcat {
             flow {

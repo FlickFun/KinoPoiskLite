@@ -16,8 +16,10 @@
 package com.fsoftstudio.kinopoisklite.domain.usecase
 
 import android.content.Intent
+import android.util.Log
 import androidx.core.content.ContextCompat.startActivity
 import com.fsoftstudio.kinopoisklite.R
+import com.fsoftstudio.kinopoisklite.common.Logger
 import com.fsoftstudio.kinopoisklite.data.CinemaDataRepository
 import com.fsoftstudio.kinopoisklite.domain.mappers.CinemaInfoMapper
 import com.fsoftstudio.kinopoisklite.domain.models.CinemaInfo
@@ -26,6 +28,7 @@ import com.fsoftstudio.kinopoisklite.domain.ui.UiCinemaInfo
 import com.fsoftstudio.kinopoisklite.domain.usecase.ExceptionsUseCase.Companion.EXCEPTION_CINEMA_INFO
 import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinema
 import com.fsoftstudio.kinopoisklite.domain.usecase.inner.FavoriteCinemaImp
+import com.fsoftstudio.kinopoisklite.common.entity.Const.POSTER_PATH_STRING
 import com.fsoftstudio.kinopoisklite.common.entity.Const.CINEMA
 import com.fsoftstudio.kinopoisklite.common.entity.Const.ID_INT
 import com.fsoftstudio.kinopoisklite.common.entity.Const.STAR_BOOLEAN
@@ -43,7 +46,8 @@ class CinemaInfoUseCase @Inject constructor(
     private val cinemaDataRepository: CinemaDataRepository,
     private val cinemaInfoMapper: CinemaInfoMapper,
     private val uiCinemaInfo: UiCinemaInfo,
-    private val exceptionsUseCase: ExceptionsUseCase
+    private val exceptionsUseCase: ExceptionsUseCase,
+    private val logger: Logger
 ) : FavoriteCinema {
 
     private var cinemaViewModel: CinemaViewModel? = null
@@ -78,7 +82,8 @@ class CinemaInfoUseCase @Inject constructor(
     }
 
     private fun updateCinemaInfo(id: Int, cinema: String, needShow: Boolean) {
-        val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ ->
+        val coroutineExceptionHandler = CoroutineExceptionHandler { _, e ->
+            logger.err(e, "updateCinemaInfo ->")
             exceptionsUseCase.showNoInternet(EXCEPTION_CINEMA_INFO, cinemaViewModel)
         }
         CoroutineScope(Dispatchers.IO).launch(coroutineExceptionHandler) {
@@ -128,6 +133,7 @@ class CinemaInfoUseCase @Inject constructor(
         val intent = Intent(ma, CinemaInfoActivity::class.java)
         intent.putExtra(ID_INT, poster.id)
         intent.putExtra(TITLE, poster.title)
+        intent.putExtra(POSTER_PATH_STRING, poster.posterPath)
         intent.putExtra(STAR_BOOLEAN, poster.favorite)
         intent.putExtra(CINEMA, poster.cinema)
         startActivity(ma, intent, null)

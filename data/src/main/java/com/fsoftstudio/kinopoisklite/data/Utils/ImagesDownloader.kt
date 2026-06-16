@@ -15,63 +15,162 @@
  */
 package com.fsoftstudio.kinopoisklite.data.Utils
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import com.fsoftstudio.kinopoisklite.common.entity.Const.JPG
-import com.fsoftstudio.kinopoisklite.common.entity.Const.LOCAL_POSTERS_FILES_PATH
 import com.fsoftstudio.kinopoisklite.common.entity.Const.URI_PATH
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.Dns
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.dnsoverhttps.DnsOverHttps
 import java.io.File
-import java.io.FileOutputStream
-import java.net.URL
-import java.nio.channels.Channels
+import java.net.InetAddress
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 @Singleton
-class ImagesDownloader @Inject constructor() {
+class ImagesDownloader @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
+
+    private val postersDir: File by lazy {
+        File(context.filesDir, "posters").apply { if (!exists()) mkdirs() }
+    }
+
+    private val client: OkHttpClient by lazy {
+        val bootstrapClient = OkHttpClient.Builder().build()
+        val dns = DnsOverHttps.Builder()
+            .client(bootstrapClient)
+            .url("https://1.1.1.1/dns-query".toHttpUrl())
+            .bootstrapDnsHosts(listOf(
+                InetAddress.getByAddress(byteArrayOf(1, 1, 1, 1)),
+                InetAddress.getByAddress(byteArrayOf(1, 0, 0, 1))
+            ))
+            .build()
+
+        OkHttpClient.Builder()
+            .dns(object : Dns {
+                override fun lookup(hostname: String): List<InetAddress> {
+                    val addresses = try {
+                        dns.lookup(hostname)
+                    } catch (e: Exception) {
+                        listOf(InetAddress.getByName("8.8.8.8"))
+                    }
+                    val filtered = addresses.filter { !it.isLoopbackAddress && it.hostAddress != "127.0.0.1" }
+                    return filtered.ifEmpty { listOf(InetAddress.getByName("8.8.4.4")) }
+                }
+            })
+            .build()
+    }
 
     fun getImage(
-        name: String,
-        id: String, imageView: ImageView, pb: ProgressBar, callback: (String) -> Unit
+        name: String?,
+        id: String,
+        imageView: ImageView,
+        pb: ProgressBar,
+        callback: (Bitmap) -> Unit
     ) {
-        val filePath = LOCAL_POSTERS_FILES_PATH + id + JPG
-        val url = URL(URI_PATH + name)
+        if (name == null) {
+            pb.visibility = View.GONE
+            return
+        }
 
-        var isFile: Boolean
-        if (File(filePath).isFile.also { isFile = it }
-            && File(filePath).length() != 0L && File(filePath).canRead()) {
-            callback.invoke(filePath)
+        val file = File(postersDir, id + JPG)
+        val url = URI_PATH + name
+
+        imageView.tag = id
+
+        if (file.exists() && file.length() > 0) {
+            CoroutineScope(IO).launch {
+                val bitmap = decodeFile(file.absolutePath)
+                withContext(Main) {
+                    if (imageView.tag == id && bitmap != null) {
+                        pb.visibility = View.GONE
+                        callback.invoke(bitmap)
+                    } else if (bitmap == null) {
+                        // Если файл битый, пробуем перекачать
+                        file.delete()
+                        downloadAndShow(url, file, id, imageView, pb, callback)
+                    }
+                }
+            }
         } else {
-            showDownloadProcess(imageView, pb)
-            if (isFile) {
-                File(filePath).delete()
-            }
-            downloadFile(url, filePath) {
-                callback.invoke(filePath)
-            }
+            downloadAndShow(url, file, id, imageView, pb, callback)
         }
     }
 
-    private fun showDownloadProcess(imageView: ImageView, pb: ProgressBar) {
-        CoroutineScope(Main).launch {
-            imageView.visibility = View.VISIBLE
-            pb.visibility = View.VISIBLE
-        }
-    }
-
-    private fun downloadFile(url: URL, filePath: String, callback: () -> Unit) {
-        url.openStream().use {
-            Channels.newChannel(it).use { rbc ->
-                FileOutputStream(filePath).use { fos ->
-                    fos.channel.transferFrom(rbc, 0, Long.MAX_VALUE)
-                    callback.invoke()
+    private fun downloadAndShow(
+        url: String,
+        file: File,
+        id: String,
+        imageView: ImageView,
+        pb: ProgressBar,
+        callback: (Bitmap) -> Unit
+    ) {
+        pb.visibility = View.VISIBLE
+        CoroutineScope(IO).launch {
+            try {
+                if (downloadFile(url, file)) {
+                    val bitmap = decodeFile(file.absolutePath)
+                    withContext(Main) {
+                        if (imageView.tag == id && bitmap != null) {
+                            pb.visibility = View.GONE
+                            callback.invoke(bitmap)
+                        } else {
+                            pb.visibility = View.GONE
+                        }
+                    }
+                } else {
+                    withContext(Main) {
+                        pb.visibility = View.GONE
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Main) {
+                    pb.visibility = View.GONE
                 }
             }
         }
+    }
+
+    private fun decodeFile(path: String): Bitmap? {
+        return try {
+            BitmapFactory.decodeFile(path)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private fun downloadFile(url: String, file: File): Boolean {
+        val request = Request.Builder().url(url).build()
+        try {
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) return false
+                response.body?.let { body ->
+                    file.parentFile?.mkdirs()
+                    file.outputStream().use { output ->
+                        body.byteStream().use { input ->
+                            input.copyTo(output)
+                        }
+                    }
+                    return true
+                }
+            }
+        } catch (e: Exception) {
+            return false
+        }
+        return false
     }
 }

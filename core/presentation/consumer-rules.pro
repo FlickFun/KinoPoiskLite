@@ -2,4 +2,3 @@
     !static <fields>;
     !private <methods>;
 }
--repackageclasses 'kotlinjavarx'

@@ -15,7 +15,7 @@ android {
         }
     }
 
-    namespace 'ccom.fsoftstudio.kinopoisklite.common_impl'
+    namespace 'com.fsoftstudio.kinopoisklite.common_impl'
     compileSdk compileAndroidSdk
 
     defaultConfig {
@@ -29,24 +29,30 @@ android {
     buildTypes {
         release {
 //            isShrinkResources = true
-            minifyEnabled = minifyEnabledRelease
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue("string", "app_name", "KinoPoiskLite")
             signingConfig signingConfigs.release
         }
         debug {
 //            isShrinkResources = false
-            minifyEnabled = minifyEnabledDebug
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue("string", "app_name", "KinoPoiskLite (debug)")
             signingConfig signingConfigs.release
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
+}
+
+kapt {
+    correctErrorTypes true
 }
 
 dependencies {
@@ -57,4 +63,6 @@ dependencies {
     implementation Libs.Android.FragmentKtx
 
     implementation project(Modules.Core.Common)
+
+    testImplementation Libs.Testing.JUnit
 }

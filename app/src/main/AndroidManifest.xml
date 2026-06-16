@@ -16,7 +16,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.KinoPoiskLite"
-        tools:targetApi="33">
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="34">
 
         <provider
             android:name="androidx.startup.InitializationProvider"

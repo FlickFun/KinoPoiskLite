@@ -27,23 +27,27 @@ android {
     buildTypes {
         release {
 //            isShrinkResources = true
-            minifyEnabled = minifyEnabledRelease
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            resValue
+            resValue("string", "app_name", "KinoPoiskLite")
             signingConfig signingConfigs.release
         }
         debug {
 //            isShrinkResources = false
-            minifyEnabled = minifyEnabledDebug
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            resValue resValueD
+            resValue("string", "app_name", "KinoPoiskLite (debug)")
             signingConfig signingConfigs.release
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 }
 
@@ -57,4 +61,6 @@ dependencies {
     implementation Libs.Google.Material
 
     api project(Modules.Core.Common)
+
+    testImplementation Libs.Testing.JUnit
 }

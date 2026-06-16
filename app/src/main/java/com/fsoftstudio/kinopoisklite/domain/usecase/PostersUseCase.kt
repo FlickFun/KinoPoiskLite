@@ -15,6 +15,7 @@
  */
 package com.fsoftstudio.kinopoisklite.domain.usecase
 
+import android.util.Log
 import com.fsoftstudio.kinopoisklite.common.Logger
 import com.fsoftstudio.kinopoisklite.data.MoviesDataRepository
 import com.fsoftstudio.kinopoisklite.data.TvSeriesDataRepository
@@ -33,6 +34,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import okhttp3.ResponseBody
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 
 class PostersUseCase @Inject constructor(
@@ -120,9 +122,10 @@ class PostersUseCase @Inject constructor(
             var count = 0
             while (!AppUseCase.isCanUpdate) {
                 if (count++ == 10) {
+                    logger.err(Throwable("isCanUpdate = false - $count"), "checkIsCanUpdateMovieAndUpdate")
                     exceptionsUseCase.showNoInternet(EXCEPTION_POSTERS)
                 }
-                delay(500)
+                delay(500.milliseconds)
             }
             isCanUpdate = true
             updateMoviePosters()
@@ -131,6 +134,7 @@ class PostersUseCase @Inject constructor(
 
     private fun updateMoviePosters(isNeedDelay: Boolean = false) {
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, e ->
+
             if (isNotNotifyCheckChangePostersWorker) {
                 exceptionsUseCase.showNoInternet(EXCEPTION_POSTERS)
             }
@@ -264,10 +268,11 @@ class PostersUseCase @Inject constructor(
             var isNeedGetCinemaInfo = true
             var count = 0
             while (isTvSeriesNotUpdated || isMovieNotUpdated) {
-                delay(1_000)
+                delay(1_000.milliseconds)
                 if (count++ > 20) {
                     isNeedGetCinemaInfo = false
                     if (isNotNotifyCheckChangePostersWorker) {
+                        logger.err(Throwable("Posters not checked -> isMovieNotUpdated = $isMovieNotUpdated, isTvSeriesNotUpdated = $isTvSeriesNotUpdated ->"), "getCinemaInfoForAllPosters")
                         exceptionsUseCase.showNoInternet(EXCEPTION_POSTERS)
                     }
                     break

@@ -26,15 +26,16 @@ import com.fsoftstudio.kinopoisklite.common.FavoriteIdsStorage
 import com.fsoftstudio.kinopoisklite.databinding.ActivityCinemaInfoBinding
 import com.fsoftstudio.kinopoisklite.domain.usecase.AppUseCase
 import com.fsoftstudio.kinopoisklite.domain.usecase.CinemaInfoUseCase
+import com.fsoftstudio.kinopoisklite.common.entity.Const.POSTER_PATH_STRING
 import com.fsoftstudio.kinopoisklite.common.entity.Const.CINEMA
 import com.fsoftstudio.kinopoisklite.common.entity.Const.ID_INT
-import com.fsoftstudio.kinopoisklite.common.entity.Const.JPG
-import com.fsoftstudio.kinopoisklite.common.entity.Const.LOCAL_POSTERS_FILES_PATH
 import com.fsoftstudio.kinopoisklite.common.entity.Const.MIN
 import com.fsoftstudio.kinopoisklite.common.entity.Const.NOTHING
 import com.fsoftstudio.kinopoisklite.common.entity.Const.NO_DATA
 import com.fsoftstudio.kinopoisklite.common.entity.Const.STAR_BOOLEAN
 import com.fsoftstudio.kinopoisklite.common.entity.Const.TITLE
+import com.fsoftstudio.kinopoisklite.domain.models.Poster
+import com.fsoftstudio.kinopoisklite.utils.setPosterImage
 import com.fsoftstudio.kinopoisklite.utils.ShowInfo
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -50,6 +51,7 @@ class CinemaInfoActivity : AppCompatActivity() {
     private val arguments: Bundle by lazy { intent.extras!! }
     private val id: Int by lazy { arguments.getInt(ID_INT) }
     private val title: String? by lazy { arguments.getString(TITLE) }
+    private val posterPath: String? by lazy { arguments.getString(POSTER_PATH_STRING) }
     private val star: Boolean by lazy { arguments.getBoolean(STAR_BOOLEAN) }
     private val cinema: String by lazy { arguments.getString(CINEMA) ?: NOTHING }
 
@@ -86,13 +88,8 @@ class CinemaInfoActivity : AppCompatActivity() {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setData() = with(binding) {
-        val filePath = LOCAL_POSTERS_FILES_PATH + id + JPG
-
-        if (File(filePath).isFile) {
-            ivInfo.setImageURI(Uri.fromFile(File(filePath)))
-        } else {
-            ivInfo.setImageDrawable(getDrawable(R.drawable.round_no_photography_24))
-        }
+        val poster = Poster(id = id, title = title ?: "", posterPath = posterPath, cinema = cinema, favorite = star)
+        ivInfo.setPosterImage(poster, pbInfo)
 
         tvTitleInfo.text = title
 
